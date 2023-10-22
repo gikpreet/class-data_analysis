@@ -1,0 +1,187 @@
+= 데이터 프레임(Data Frame)
+
+== Data Frame
+
+* 데이터를 다룰 때 가장 많이 사용하는 데이터 형태
+* 열(column)과 행(row)로 구성된 매트릭스(Matrix) 형태의 표
+** 열은 column, variable로 불리며, 세로로 나열되는 열을 나타냄
+** 행은 row, case로 불리며, 각 데이터 객체를 나타냄
+
+image:./images/image01.png[data, 600]
+
+== Data Frame 생성 (List)
+
+* list 사용
+** column 이름이 정수형으로 지정됨
+
+[source, python]
+----
+import pandas as pd
+
+df = pd.DataFrame([ ['Celine', 'France', 90],
+                    ['James', 'UK', 80],
+                    ['Jason', 'USA', 20],
+                    ['Hans', 'Germany', 40]])
+----
+
+[%header, cols=4, width=50%]
+|===
+|  | 0 | 1 | 2
+|0 |Celine |France | 90
+|1 |James  |UK | 80
+|2 |Jason  |USA|20
+|3 |Hans   |Germany|40
+|===
+
+== Data Frame 생성 (Dictionary)
+
+* Dictionary 사용
+
+[source, python]
+----
+import pandas as pd
+
+df = pd.DataFrame({'name'  :['Celine', 'James', 'Jason', 'Hans'],
+                    'nation':['France', 'UK', 'USA', 'Germany'],
+                    'grade' :[90, 80, 20, 40]})
+----
+
+[%header, cols=4, width=50%]
+|===
+|  |name   |nation | grade
+|0 |Celine |France | 90
+|1 |James  |UK | 80
+|2 |Jason  |USA|20
+|3 |Hans   |Germany|40
+|===
+
+== Data Frame 생성 (Dictionary + index)
+
+** 이름을 key로 사용
+
+[source, python]
+----
+import pandas as pd
+
+df = pd.DataFrame({'nation':['France', 'UK', 'USA', 'Germany'],
+                    'grade' :[90, 80, 20, 40]})
+df.index = ['Celine', 'James', 'Jsaon', 'Hans']
+----
+
+[%header, cols=3, width=40%]
+|===
+|  |nation | grade
+|Celine |France | 90
+|James  |UK | 80
+|Jason  |USA|20
+|Hans   |Germany|40
+|===
+
+== Data Frame
+
+* Column에 액세스 +
+[source, python]
+----
+df[0]
+0    Celine
+1     James
+2     Jason
+3      Hans
+----
+
+* Row에 액세스 +
+[source, python]
+----
+# Index로 접근
+df.iloc[0]
+nation    France
+grade         90
+----
+[source, python]
+----
+# Key로 접근
+df.iloc['Celine']
+nation    France
+grade         90
+----
+
+== Data Frame
+
+* 함수 
+** 집계 
++
+[source, python]
+----
+sum(df['math'])
+230
+----
+** 평균 
++
+[source, python]
+----
+sum(df['math']) / len(df)
+----
+** 전체 데이터 평균 
++ 
+[source, python]
+----
+df.mean()
+math       57.5
+english    82.5
+science    80.0
+----
+
+** 전체 데이터 설명
++
+[source, python]
+----
+df2.describe()
+            math     english     science
+count   4.000000    4.000000    4.000000
+mean   57.500000   82.500000   80.000000
+std    33.040379   17.078251   33.665016
+min    20.000000   60.000000   30.000000
+25%    35.000000   75.000000   75.000000
+50%    60.000000   85.000000   95.000000
+75%    82.500000   92.500000  100.000000
+max    90.000000  100.000000  100.000000
+----
+
+== 연습문제
+
+* 아래 데이터를 Data Frame으로 작성하세요 +
+[%header, cols=3, width=50%]
+|===
+|product|price|sales_volume
+|Apple  |1800 | 24
+|Strawberry | 1500 |38
+|Watermelon | 3000 |13
+|===
+* 과일의 가격 평균과 판매량 평균을 구하세요
+
+== 외부 데이터 사용
+
+https://rfriend.tistory.com/250
+
+* excel 파일 적재 : read_excel 함수 사용
++
+[source, python]
+----
+# 단순 파일 적재
+df_titanic = pd.read_excel('titanic.xls')
+# worksheet 적재
+df_titanic = pd.read_excel('titanic.xls', sheet_name='titanic3')
+df_titanic = pd.read_excel('titanic.xls', sheet_name=0) # worksheet index
+# header(컬럼 이름)이 없는 경우
+df_titanic = pd.read_excel('titanic.xls', header=None)
+----
+
+* csv 파일 적재 : read_csv 함수 사용
++
+[source, python]
+----
+# 단순 파일 적재 (기본 구분자: ',')
+df_titanic = pd.read_csv('titanic.csv')
+# 구분자 사용
+df_titanic = pd.read_csv('titanic.csv', sep='|')
+----
