@@ -18,120 +18,153 @@ image:./images/image01.png[data, 600]
 ----
 import pandas as pd
 
-df = pd.DataFrame([ ['Celine', 'France', 90],
-                    ['James', 'UK', 80],
-                    ['Jason', 'USA', 20],
-                    ['Hans', 'Germany', 40]])
+df = pd.DataFrame([ 
+    ['Celine', 'France', 90, 100, 100],
+    ['James','UK', 80, 40, 30],
+    ['Jason','USA',80, 40, 60],
+    ['Hans','Germany', 60, 50, 90]
+])
 ----
 
-[%header, cols=4, width=50%]
+[%header, cols=6, width=50%]
 |===
-|  | 0 | 1 | 2
-|0 |Celine |France | 90
-|1 |James  |UK | 80
-|2 |Jason  |USA|20
-|3 |Hans   |Germany|40
+|  | 0      | 1         |2  | 3  | 4
+|0 |Celine  |France     |90 |100 |100
+|1 |James   |UK         |80 |40  |30
+|2 |Jason   |USA        |20 |40  |60
+|3 |Hans    |Germany    |40 |50  |90
 |===
 
 == Data Frame 생성 (Dictionary)
 
 * Dictionary 사용
+** column 이름 지정
 
 [source, python]
 ----
 import pandas as pd
 
-df = pd.DataFrame({'name'  :['Celine', 'James', 'Jason', 'Hans'],
-                    'nation':['France', 'UK', 'USA', 'Germany'],
-                    'grade' :[90, 80, 20, 40]})
+df2 = pd.DataFrame({
+    'name':     ['Celine','James','Jason','Hans'],
+    'nation':   ['France','UK','USA','Germany'],
+    'english':  [90,80,80,60],
+    'math':     [100,40,40,50],
+    'science':  [100,30,60,90]
+})
 ----
 
-[%header, cols=4, width=50%]
+[%header, cols=6, width=50%]
 |===
-|  |name   |nation | grade
-|0 |Celine |France | 90
-|1 |James  |UK | 80
-|2 |Jason  |USA|20
-|3 |Hans   |Germany|40
+|  |name   |nation  |english    |math   |science
+|0 |Celine |France  |90         |100    |100
+|1 |James  |UK      |80         |40     |30
+|2 |Jason  |USA     |20         |40     |60
+|3 |Hans   |Germany |40         |50     |90
 |===
 
 == Data Frame 생성 (Dictionary + index)
 
+* dictionary 사용
 ** 이름을 key로 사용
 
 [source, python]
 ----
 import pandas as pd
 
-df = pd.DataFrame({'nation':['France', 'UK', 'USA', 'Germany'],
-                    'grade' :[90, 80, 20, 40]})
-df.index = ['Celine', 'James', 'Jsaon', 'Hans']
+df3 = pd.DataFrame({
+    'nation':   ['France','UK','USA','Germany'],
+    'english':  [90,80,80,60],
+    'math':     [100,40,40,50],
+    'science':  [100,30,60,90]
+})
 ----
 
-[%header, cols=3, width=40%]
+[%header, cols=5, width=40%]
 |===
-|  |nation | grade
-|Celine |France | 90
-|James  |UK | 80
-|Jason  |USA|20
-|Hans   |Germany|40
+|       |nation |english    |math   |science
+|Celine |France |90         |100    |100
+|James  |UK     |80         |40     |30
+|Jason  |USA    |20         |40     |60
+|Hans   |Germany|40         |50     |90
 |===
 
 == Data Frame
 
-* Column에 액세스 +
+* Column에 액세스 
++
 [source, python]
 ----
 df[0]
-0    Celine
-1     James
-2     Jason
-3      Hans
+df2['name']
+df3['nation']
+df2.name
+df3.nation
 ----
-
-* Row에 액세스 +
+* Row에 액세스 
++
 [source, python]
 ----
 # Index로 접근
-df.iloc[0]
-nation    France
-grade         90
+df.iloc[0]      # list
+df2.iloc[1]     # dictionary
+df3.iloc[2]     # dictionary - index
 ----
++
 [source, python]
 ----
 # Key로 접근
-df.iloc['Celine']
-nation    France
-grade         90
+df.loc[0]           # list
+df2.loc[1]          # dictionary
+df3.loc['Celine']   # dictionary - index
 ----
 
-== Data Frame
+== 집계 함수
 
-* 함수 
-** 집계 
+* 최대값
 +
 [source, python]
 ----
-sum(df['math'])
-230
+max(df2['math'])    # python의 max 함수
+df2['math'].max()   # DataFrame column의 max 함수
+df2.math.max()      # DataFrame column의 max 함수
+df2.max()           # DataFrame 모든 column의 최대값
 ----
-** 평균 
+* 최소값
 +
 [source, python]
 ----
-sum(df['math']) / len(df)
+min(df2['english'])     # python의 min 함수
+df2['english'].min()    # DataFrame column의 min 함수
+df2.english.min()       # DataFrame column의 min 함수
+df2.min()               # DataFrame 모든 column의 최소값
 ----
-** 전체 데이터 평균 
-+ 
+* 합
++
 [source, python]
 ----
-df.mean()
-math       57.5
-english    82.5
-science    80.0
+sum(df2['math'])    # python의 sum 함수
+df2['math'].sum()   # DataFrame column의 sum 함수
+df2.math.sum()      # DataFrame column의 sum 함수
+df.sum()            # 전체 DataFrame의 합계
 ----
-
-** 전체 데이터 설명
+* 평균 
++
+[source, python]
+----
+sum(df2['math']) / len(df2) # 나누기
+df2['math'].mean()      # DataFrame column의 mean 함수
+df2.math.mean()         # DataFrame column의 mean 함수
+df2.mean()              # 전체 DataFrame의 평균
+----
+* 표준 편차
++
+[source, python]
+----
+df2['math'].std()   # DataFrame column의 std 함수
+df2.math.std()      # DataFrame column의 std 함수
+df2.std()           # 전체 DataFrame의 표준편차
+----
+* 전체 데이터 설명
 +
 [source, python]
 ----
@@ -150,7 +183,7 @@ max    90.000000  100.000000  100.000000
 == 연습문제
 
 * 아래 데이터를 Data Frame으로 작성하세요 +
-[%header, cols=3, width=50%]
+[%header, cols=3, width=40%]
 |===
 |product|price|sales_volume
 |Apple  |1800 | 24
@@ -228,11 +261,12 @@ df_pop = df_pop202309.copy()
 ----
 +
 * 컬럼명 변경: _rename()_ 메소드
++
 [source, python]
 ----
 df_pop = df_pop.rename(columns= {'행정구역':'district'})
 df_pop.rename(columns={'총인구수':'population','세대수':'household'}, inplace=True)
-df.columns = ['district','population','household','pop_household','male','female','gener_ratio']
+df_pop.columns = ['district','population','household','pop_household','male','female']
 ----
 
 == 타입 변환
@@ -262,3 +296,4 @@ df_pop.female = df_pop.female.str.replace(',','').astype('int')
 ----
 df_pop['gender_ratio'] = round(df_pop['male'] / df_pop['female'], 2)
 ----
+
