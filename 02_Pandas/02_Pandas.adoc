@@ -1,13 +1,81 @@
 = 데이터 프레임(Data Frame)
 
-== Data Frame
+== Pandas
+
+* 데이터 분석의 80~90%는 데이터를 수집하고 정리하는 일이 차지함
+* 10~20%가 알고리즘을 선택하고, 모델링 결과를 분석하여 데이터로 부터 유용한 정보를 산출하는 분석 프로세스
+* Pandas 라이브러리는 데이터를 수집하고 정리하는데 최적화된 도구
+* Python을 기반으로 하여 쉬운 사용
+* 데이터 분석을 위한 여러 종류의 클래스와 다양한 내장 함수를 제공
+
+== Pandas Data Structure
+
+* 분석을 위한 데이터의 종류는 엄청나게 다양함
+* 서로 다른 형식을 갖는 여러 종류의 데이터를 컴퓨터가 이해할 수 있도록 동일한 형식을 갖는 구조로 통합할 필요가 있음
+* Pandas는 서로 다른 타입의 데이터를 공통의 포맷으로 정리할 수 있는 자료 구조를 제공
+** **Series** 1차원 배열 형태의 자료구조
+** **DataFrame** 2차원 매트릭스 형태의 자료구조
+
+== Series
+
+* 데이터가 순차적으로 나열된 1차원 배열의 형태로 데이터를 저장
+* Python의 dictionary와 유사한 형태의 자료구조
+** Index와 Value로 구성됨
+
+image:./images/image01.png[Series structure]
+
+** Dictionary에서 생성
++
+[source, python]
+----
+dict = {'a': 1, 'b': 2, 'c': 3}
+series = pd.Series(dict)
+----
+
+image:./images/image03.png[]
+
+** list에서 생성
+
+[source, python]
+----
+list = ['2023-12-30', 3.14, 'Celine', True]
+series = pd.Series(list)
+----
+
+image:./images/image04.png[]
+
+** tuple에서 생성
+
+[source, python]
+----
+tup = ('Celine', '1976-10-28', 'femail', True)
+# 인덱스 옵션 지정
+series = pd.Series(tup, index=['name','birthday','gender', "isStudent"])
+----
+
+== 데이터 액세스
+
+image:./images/image05.png[]
+
+[source, python]
+----
+series[0]
+series[[0, 1]]
+series[0:4]
+series['gender']
+series[['name', 'gender']]
+----
+
+== Data Frame 
 
 * 데이터를 다룰 때 가장 많이 사용하는 데이터 형태
-* 열(column)과 행(row)로 구성된 매트릭스(Matrix) 형태의 표
+* 열(column)과 행(row)로 구성된 2차원 벡터(Vector) 또는 행렬(Matrix)
 ** 열은 column, variable로 불리며, 세로로 나열되는 열을 나타냄
 ** 행은 row, case로 불리며, 각 데이터 객체를 나타냄
 
-image:./images/image01.png[data, 600]
+image:./images/image06.png[data, 600]
+
+image:./images/image02.png[data, 600]
 
 == Data Frame 생성 (List)
 
@@ -295,5 +363,15 @@ df_pop.female = df_pop.female.str.replace(',','').astype('int')
 [source, python]
 ----
 df_pop['gender_ratio'] = round(df_pop['male'] / df_pop['female'], 2)
+df_pop['male_ratio'] = round(df_pop.male / df_pop.population, 4) * 100
+df_pop['female_ratio'] = round(df_pop.female / df_pop.population, 4) * 100
 ----
 
+== 컬럼 삭제
+* 컬럼 삭제
++
+[source, python]
+----
+df_pop.drop(columns = ['gender_ratio'], inplace=True)
+df_pop2 = df_pop.drop('gender_ratio', axis=1)
+----
