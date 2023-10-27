@@ -1,0 +1,79 @@
+= Hortonworks Data Platform 설치
+
+이 연습에서는 Docker상에 Hortonworks Data Platform을 설치합니다. 아래 절차에 따릅니다.
+
+== Ubuntu에 Docker 설치
+
+=== 설치 전 작업
+
+여기에서는 Ubuntu Linux에 docker Community Edition을 설치합니다. 아래 절차에 따릅니다.
+
+1. 아래 명령을 실행하여 apt를 업데이트 합니다.
++
+----
+$ sudo apt update
+----
+2. 아래 명령들을 실행하여 Docker에 필요한 패키지들을 설치합니다.
++
+----
+$ sudo apt install ca-certificates curl gnupg
+----
+3. 아래 명령들을 순서대로 실행하여 GPG Key를 추가합니다.
++
+----
+ $ sudo install -m 0755 -d /etc/apt/keyrings
+ $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+ $ sudo chmod a+r /etc/apt/keyrings/docker.gpg
+----
+4. 아래 명령을 수행하여 리포지토리를 설정합니다.
++
+----
+$ echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+----
+
+=== Docker 설치
+
+1. 아래 명령을 실행하여 apt를 업데이트 합니다.
++
+----
+$ sudo apt update\
+----
+2. 아래 명령을 실행하여 Docker Commuinity Edition을 설치합니다.
++
+----
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+----
+3. 아래 명령을 실행하여 설치된 Docker를 확인합니다.
++
+----
+$ sudo docker run hello-world  
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+7050e35b49f5: Pull complete 
+Digest: sha256:5097f06d4d4894273901f0aa97abc0ce943ed95d4722b285e8be9b795ec3766c
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!  
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+1. The Docker client contacted the Docker daemon.
+2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+  (arm64v8)
+3. The Docker daemon created a new container from that image which runs the 
+   executable that produces the output you are currently reading.
+4. The Docker daemon streamed that output to the Docker client, which sent it 
+   to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:  
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:  
+ https://hub.docker.com/
+
+For more examples and ideas, visit:  
+ https://docs.docker.com/get-started/
+----
