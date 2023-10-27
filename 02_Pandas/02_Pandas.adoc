@@ -21,6 +21,7 @@
 * 데이터가 순차적으로 나열된 1차원 배열의 형태로 데이터를 저장
 * Python의 dictionary와 유사한 형태의 자료구조
 ** Index와 Value로 구성됨
+** 열벡터 형태의 자료구조
 
 image:./images/image01.png[Series structure]
 
@@ -35,7 +36,7 @@ series = pd.Series(dict)
 image:./images/image03.png[]
 
 ** list에서 생성
-
++
 [source, python]
 ----
 list = ['2023-12-30', 3.14, 'Celine', True]
@@ -45,7 +46,7 @@ series = pd.Series(list)
 image:./images/image04.png[]
 
 ** tuple에서 생성
-
++
 [source, python]
 ----
 tup = ('Celine', '1976-10-28', 'femail', True)
@@ -66,7 +67,7 @@ series['gender']
 series[['name', 'gender']]
 ----
 
-== Data Frame 
+== DataFrame 
 
 * 데이터를 다룰 때 가장 많이 사용하는 데이터 형태
 * 열(column)과 행(row)로 구성된 2차원 벡터(Vector) 또는 행렬(Matrix)
@@ -77,11 +78,17 @@ image:./images/image06.png[data, 600]
 
 image:./images/image02.png[data, 600]
 
-== Data Frame 생성 (List)
+== DataFrame 생성
+* DataFrame을 만들기 위해서는 같은 길이(원소의 개수가 동일한)dml 1차원 배열 여러 개가 필요함
+* DataFrame은 여러 개의 Series(열, column)을 모아놓은 집합과 같음
+** Dictionary의 value에 해당하는 각 리스트가 Series 배열로 변환되어 DataFrame의 column이 됨
+** Dictionary의 key는 각 시리즈의 이름으로 변환되어 DataFrame의 column 이름이 됨
+
+== DataFrame 생성 (List)
 
 * list 사용
 ** column 이름이 정수형으로 지정됨
-
++
 [source, python]
 ----
 import pandas as pd
@@ -93,7 +100,7 @@ df = pd.DataFrame([
     ['Hans','Germany', 60, 50, 90]
 ])
 ----
-
++
 [%header, cols=6, width=50%]
 |===
 |  | 0      | 1         |2  | 3  | 4
@@ -103,11 +110,60 @@ df = pd.DataFrame([
 |3 |Hans    |Germany    |40 |50  |90
 |===
 
-== Data Frame 생성 (Dictionary)
+== DataFrame 생성 (List + columns)
+
+* column 이름 지정
++
+[source, python]
+----
+df = pd.DataFrame([ 
+    ['Celine', 'France', 90, 100, 100],
+    ['James','UK', 80, 40, 30],
+    ['Jason','USA',80, 40, 60],
+    ['Hans','Germany', 60, 50, 90]],
+    columns = ['name', 'nation', 'english', 'math', 'science']
+)
+----
++
+[%header, cols=6, width=50%]
+|===
+|  |name    |nation     |english  |math  |science
+|0 |Celine  |France     |90 |100 |100
+|1 |James   |UK         |80 |40  |30
+|2 |Jason   |USA        |20 |40  |60
+|3 |Hans    |Germany    |40 |50  |90
+|===
+
+== DataFrame 생성 (List + columns + index)
+
+* name을 index로 지정
++
+[source, python]
+----
+df = pd.DataFrame([ 
+    ['France', 90, 100, 100],
+    ['UK', 80, 40, 30],
+    ['USA',80, 40, 60],
+    ['Germany', 60, 50, 90]],
+    columns = ['nation', 'english', 'math', 'science'],
+    index = ['celine', 'James','Jason','Hans']
+)
+----
++
+[%header, cols=5, width=50%]
+|===
+|nation  |english  |math  |science
+|Celine  |France     |90 |100 |100
+|James   |UK         |80 |40  |30
+|Jason   |USA        |20 |40  |60
+|Hans    |Germany    |40 |50  |90
+|===
+
+== DataFrame 생성 (Dictionary)
 
 * Dictionary 사용
 ** column 이름 지정
-
++
 [source, python]
 ----
 import pandas as pd
@@ -120,7 +176,7 @@ df2 = pd.DataFrame({
     'science':  [100,30,60,90]
 })
 ----
-
++
 [%header, cols=6, width=50%]
 |===
 |  |name   |nation  |english    |math   |science
@@ -130,7 +186,7 @@ df2 = pd.DataFrame({
 |3 |Hans   |Germany |40         |50     |90
 |===
 
-== Data Frame 생성 (Dictionary + index)
+== DataFrame 생성 (Dictionary + index)
 
 * dictionary 사용
 ** 이름을 key로 사용
@@ -156,19 +212,28 @@ df3 = pd.DataFrame({
 |Hans   |Germany|40         |50     |90
 |===
 
-== Data Frame
+== DataFrame
 
 * Column에 액세스 
+** 하나의 column에 액세스 할 때는 list 또는 .['column_name'] 사용
 +
 [source, python]
 ----
 df[0]
-df2['name']
-df3['nation']
-df2.name
-df3.nation
+df['name']
+df['nation']
+df.name
+df.nation
+----
+** 하나 이상의 column에 액세스 할 때는 list를 사용
++
+[source, python]
+----
+df[['name', 'nation']]
 ----
 * Row에 액세스 
+** 인덱스 이름을 사용할 때는 iloc 인덱서 사용
+** 정수형 인덱스를 사용할 때는 loc 인덱서 사용
 +
 [source, python]
 ----
@@ -184,6 +249,25 @@ df3.iloc[2]     # dictionary - index
 df.loc[0]           # list
 df2.loc[1]          # dictionary
 df3.loc['Celine']   # dictionary - index
+----
+* cell에 액세스
+** row index 이름과 column 이름을 [row, column] 형식의 2차원 좌표로 사용
++
+[source, python]
+----
+df.loc['celine', 'nation']
+----
+** row index 이름과 두 개의 column 이름을 list로 사용
++
+[source, python]
+----
+df.loc['celine', ['nation', 'english']]
+----
+
+** 정수형 low index와 column 번호를 [row_number, column_number] 형식의 2차원 좌표로 사용
+[source, python]
+----
+df.iloc[0,0]
 ----
 
 == 집계 함수
@@ -250,7 +334,8 @@ max    90.000000  100.000000  100.000000
 
 == 연습문제
 
-* 아래 데이터를 Data Frame으로 작성하세요 +
+* 아래 데이터를 Data Frame으로 작성하세요 
++
 [%header, cols=3, width=40%]
 |===
 |product|price|sales_volume
@@ -319,7 +404,7 @@ df_pop202309_info()
 df_pop202309.describe()
 ----
 
-== 구조 변환
+== 구조 변환 (column)
 
 * Data Frame 복사본 생성: _copy()_ 메소드
 +
@@ -334,7 +419,23 @@ df_pop = df_pop202309.copy()
 ----
 df_pop = df_pop.rename(columns= {'행정구역':'district'})
 df_pop.rename(columns={'총인구수':'population','세대수':'household'}, inplace=True)
+----
+* 컬럼명 변경: 컬럼명 list
++
+[source, python]
+----
 df_pop.columns = ['district','population','household','pop_household','male','female']
+----
+
+== 구조 변환 (index)
+
+* 인덱스 변환: 인덱스 list
++
+[source, python]
+----
+df_pop.index = df_pop['district']
+df_pop.drop(columns=['district'], inplace=True)
+df_pop.loc['경기도']
 ----
 
 == 타입 변환
@@ -375,3 +476,7 @@ df_pop['female_ratio'] = round(df_pop.female / df_pop.population, 4) * 100
 df_pop.drop(columns = ['gender_ratio'], inplace=True)
 df_pop2 = df_pop.drop('gender_ratio', axis=1)
 ----
+
+== Row 추가
+
+* 추가하려는 행 이름과 데이터 값을 loc 인덱서 사용
