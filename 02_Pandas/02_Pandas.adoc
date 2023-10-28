@@ -25,17 +25,11 @@
 
 image:./images/image01.png[Series structure]
 
-** Dictionary에서 생성
+=== list에서 생성
+
+* list에서 Series생성
 +
-[source, python]
-----
-dict = {'a': 1, 'b': 2, 'c': 3}
-series = pd.Series(dict)
-----
-
-image:./images/image03.png[]
-
-** list에서 생성
+_pandas.Series(list)_
 +
 [source, python]
 ----
@@ -45,7 +39,11 @@ series = pd.Series(list)
 
 image:./images/image04.png[]
 
-** tuple에서 생성
+=== tuple에서 생성
+
+* tuple에서 Series 생성
++
+_pandas.Series(tuple)_
 +
 [source, python]
 ----
@@ -53,6 +51,20 @@ tup = ('Celine', '1976-10-28', 'femail', True)
 # 인덱스 옵션 지정
 series = pd.Series(tup, index=['name','birthday','gender', "isStudent"])
 ----
+
+image:./images/image04.png[]
+
+** Dictionary에서 생성
++
+_pandas.Series(dictionary)_
++
+[source, python]
+----
+dict = {'a': 1, 'b': 2, 'c': 3}
+series = pd.Series(dict)
+----
+
+image:./images/image03.png[]
 
 == 데이터 액세스
 
@@ -469,6 +481,7 @@ df_pop['female_ratio'] = round(df_pop.female / df_pop.population, 4) * 100
 ----
 
 == 컬럼 삭제
+
 * 컬럼 삭제
 +
 [source, python]
@@ -479,4 +492,21 @@ df_pop2 = df_pop.drop('gender_ratio', axis=1)
 
 == Row 추가
 
-* 추가하려는 행 이름과 데이터 값을 loc 인덱서 사용
+* 추가하려는 행 이름으로 loc 인덱서를 사용하고 데이터 값 또는 list를 값으로 사용 +
++
+_DataFrame.loc['새 row 이름'] = 데이터 값 (또는 배열)_
++
+[source, python]
+----
+df.loc['Kurt'] = ['USA', 90,40,20]
+----
++
+[%header, cols=5, width=60%]
+|===
+|	    |nation	|english	|math	|science
+|Celine	|France	|90	|100	|100
+|James	|UK	    |80	|40	|30
+|Jason	|USA	|80	|40	|60
+|Hans	|Germany	|60	|50	|90
+|Kurt	|USA	|90	|40	|20
+|===
