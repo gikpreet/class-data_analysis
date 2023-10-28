@@ -1,8 +1,60 @@
 == 외부 데이터 사용
 
 * Pandas는 다양한 형태의 외부 파일을 읽어와서 데이터 프레임으로 변환하는 함수를 가지고 있음
+* DataFrame을 다양한 유형의 파일로 저장할 수 있음
 
-* excel 파일 적재 : read_excel 함수 사용
+[%header, cols=3, width=80%]
+|===
+|File Format    |Reader     |Writer
+|CSV            |read_csv   |to_csv
+|JSON           |read_json  |to_json
+|HTML           |read_html  |to_html
+|Local Clipboard|read_clipboard|to_clipboard
+|Microsoft Excel|read_excel|to_excel
+|HDFS5 Format   |read_hdf   |to_hdf
+|SQL            |read_sql   |to_sql
+|===
+
+== CSV
+
+* Comma Seperated Values 파일
+* read_csv() 함수 사용
++
+_pandas.read_csv('file_name')_
+
+[source, python]
+----
+# 단순 파일 적재 (기본 구분자: ',')
+df_pop202309 = pd.read_csv('population202309.csv')
+# 구분자 사용
+df_pop202309 = pd.read_csv('population202309.csv', sep='|')
+----
+
+* read_csv 함수 옵션
+** header _(Pandas.read_csv('file.csv', header=0))_  +
+DataFrame의 column 이름으로 사용할 row를 지정 (기본 값 0: 첫 번째 row를 column의 이름으로 지정) +
+_header=None_ 으로 지정할 경우 column 이름을 지정하지 않음
+** index_col 옵션 _(Pandas.read_csv(index_col=False))_ +
+DataFrame의 index로 사용할 row를 지정(기본 값 None: 인덱스로 사용할 row를 지정하지 않음)
+
+[%header, cols="1,3", width=80%]
+|===
+|path |파일명을 포함하는 파일의 위치, URL
+|sep| 텍스트 데이터를 필드별로 구분하는 문자
+|delimiter|sep 옵션과 동일
+|header|column 이름으로 사용될 row의 번호(기본값 0)
+|index_col|column 인덱스로 사용될 column의 번호 또는 이름
+|names|column 이름으로 사용될 문자열 형식의 list
+|skiprows|처음 몇 줄을 skip 할 것인지 설정(숫자) +
+skip 하려는 row의 번호를 list 형식으로 설정 가능(예: [1,3,5])
+|===
+
+== Microsoft Excel
+
+* Microsoft Excel 파일(xls, xlsx)의 column과 row는 DataFrame의 column과 row로 1:1 대응됨
+* read_excel() 함수 사용
++
+_pandas.read_excel('file_name')_
 +
 [source, python]
 ----
@@ -15,12 +67,30 @@ df_titanic = pd.read_excel('titanic.xls', sheet_name=0) # worksheet index
 df_titanic = pd.read_excel('titanic.xls', header=None)
 ----
 
-* csv 파일 적재 : read_csv 함수 사용
+* csv의 옵션을 그대로 사용할 수 있음
+
+== JSON
+
+* JavaScript Object Notation: JavaScript 객체 문법으로 구조화된 데이터를 표현하기 위한 문자 기반의 표준 포맷
+* 일반적으로 Key:Value 구조, 구조가 중첩되는 방식에 따라 다르게 적용됨
+* read_json() 함수 사용
++
+_pandas.read_json('file_name')_
 +
 [source, python]
 ----
-# 단순 파일 적재 (기본 구분자: ',')
-df_pop202309 = pd.read_csv('population202309.csv')
-# 구분자 사용
-df_pop202309 = pd.read_csv('population202309.csv', sep='|')
+df_json = pd.read_json('json_sample.json')
+----
+
+== HTML 페이지의 Table
+
+* HTML 웹 페이지에 있는 <table> 태그에서 표 형식의 데이터를 모두 찾아서 DataFrame 형식으로 변환
+* Table 데이터는 각각 별도의 DataFrame으로 변환됨
++
+_pandas.read_html('URL 또는 html 파일이름')_
++
+[source, python]
+----
+boxoffices = pd.read_html('https://movie.datamotion.co.kr/Boxoffice')
+df_boxoffice = boxoffices[1]
 ----
