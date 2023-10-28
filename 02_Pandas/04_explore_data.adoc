@@ -1,0 +1,108 @@
+== 집계 함수
+
+* 최대값
++
+[source, python]
+----
+max(df2['math'])    # python의 max 함수
+df2['math'].max()   # DataFrame column의 max 함수
+df2.math.max()      # DataFrame column의 max 함수
+df2.max()           # DataFrame 모든 column의 최대값
+----
+* 최소값
++
+[source, python]
+----
+min(df2['english'])     # python의 min 함수
+df2['english'].min()    # DataFrame column의 min 함수
+df2.english.min()       # DataFrame column의 min 함수
+df2.min()               # DataFrame 모든 column의 최소값
+----
+* 합
++
+[source, python]
+----
+sum(df2['math'])    # python의 sum 함수
+df2['math'].sum()   # DataFrame column의 sum 함수
+df2.math.sum()      # DataFrame column의 sum 함수
+df.sum()            # 전체 DataFrame의 합계
+----
+* 평균 
++
+[source, python]
+----
+sum(df2['math']) / len(df2) # 나누기
+df2['math'].mean()      # DataFrame column의 mean 함수
+df2.math.mean()         # DataFrame column의 mean 함수
+df2.mean()              # 전체 DataFrame의 평균
+----
+* 표준 편차
++
+[source, python]
+----
+df2['math'].std()   # DataFrame column의 std 함수
+df2.math.std()      # DataFrame column의 std 함수
+df2.std()           # 전체 DataFrame의 표준편차
+----
+* 전체 데이터 설명
++
+[source, python]
+----
+df2.describe()
+            math     english     science
+count   4.000000    4.000000    4.000000
+mean   57.500000   82.500000   80.000000
+std    33.040379   17.078251   33.665016
+min    20.000000   60.000000   30.000000
+25%    35.000000   75.000000   75.000000
+50%    60.000000   85.000000   95.000000
+75%    82.500000   92.500000  100.000000
+max    90.000000  100.000000  100.000000
+----
+
+== 데이터 구조
+
+[%header, cols="1,2", width=50%]
+|===
+|함수|기능
+|head()|데이터의 앞부분 출력
+|tail()|데이터의 뒷부분 출력
+|shape |행, 열 개수 출력
+|info()|변수 속성 출력
+|describe()|요약 통계량 출력
+|===
+
+== 데이터 구조
+
+[source, python]
+----
+# 처음 지정된 개수의 row (기본값 5)
+df_pop202309.head()
+df_pop202309.head(10)
+
+# 마지막 지정된 개수의 row (기본값 5)
+df_pop202309.tail()
+df_pop202309.tail(15)
+
+# Data Frame의 메소드(함수)가 아닌 속성(Attribute)
+df_pop202309.shape
+
+# Data Frame의 컬럼 속성
+df_pop202309_info()
+
+# 요약 통계량
+df_pop202309.describe()
+----
+
+== 연습문제
+
+* 아래 데이터를 Data Frame으로 작성하세요 
++
+[%header, cols=3, width=40%]
+|===
+|product|price|sales_volume
+|Apple  |1800 | 24
+|Strawberry | 1500 |38
+|Watermelon | 3000 |13
+|===
+* 과일의 가격 평균과 판매량 평균을 구하세요

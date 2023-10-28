@@ -52,31 +52,71 @@ tup = ('Celine', '1976-10-28', 'femail', True)
 series = pd.Series(tup, index=['name','birthday','gender', "isStudent"])
 ----
 
-image:./images/image04.png[]
+image:./images/image07.png[]
 
-** Dictionary에서 생성
+=== Dictionary에서 생성
+
+* Dictionary에서 Series 생성
 +
 _pandas.Series(dictionary)_
 +
 [source, python]
 ----
-dict = {'a': 1, 'b': 2, 'c': 3}
+dict = {'name': 'Celine', 'birthday': '1976-10-28', 'gender': 'female', 'isStudent': True}
 series = pd.Series(dict)
+series
 ----
 
 image:./images/image03.png[]
 
-== 데이터 액세스
+== Series 데이터 액세스
 
+* 인덱스, 인덱스명 사용
+** list를 사용하여 여러 데이터에 액세스
++
 image:./images/image05.png[]
-
++
 [source, python]
 ----
 series[0]
+'Celine'
+
 series[[0, 1]]
+name        Celine
+birthday    1976-10-28
+
 series[0:4]
+name             Celine
+birthday     1976-10-28
+gender           femail
+isStudent          True
+
 series['gender']
+'female'
+
 series[['name', 'gender']]
+name      Celine
+gender    female
+----
++
+** 인덱스에 액세스
++
+_Series_object.index_
++
+[source, python]
+----
+series.index
+Index(['name', 'birthday', 'gender', 'isStudent'], dtype='object')
+----
++
+** 데이터에 액세스
++
+_Series_object.values
++
+[source, python]
+----
+series.values
+array(['Celine', '1978-10-26', 'female', True], dtype=object)
 ----
 
 == DataFrame 
@@ -100,6 +140,8 @@ image:./images/image02.png[data, 600]
 
 * list 사용
 ** column 이름이 정수형으로 지정됨
++
+_Pandas.DataFrame( list )_
 +
 [source, python]
 ----
@@ -162,7 +204,7 @@ df = pd.DataFrame([
 )
 ----
 +
-[%header, cols=5, width=50%]
+[%header, cols=4, width=50%]
 |===
 |nation  |english  |math  |science
 |Celine  |France     |90 |100 |100
@@ -207,12 +249,13 @@ df2 = pd.DataFrame({
 ----
 import pandas as pd
 
-df3 = pd.DataFrame({
+df = pd.DataFrame({
     'nation':   ['France','UK','USA','Germany'],
     'english':  [90,80,80,60],
     'math':     [100,40,40,50],
     'science':  [100,30,60,90]
 })
+df.index = ['Celine','James','Jason','Hans']
 ----
 
 [%header, cols=5, width=40%]
@@ -224,7 +267,35 @@ df3 = pd.DataFrame({
 |Hans   |Germany|40         |50     |90
 |===
 
-== DataFrame
+
+== 연습문제
+
+* 아래 데이터를 Data Frame으로 작성하세요
+* DataFrame 객체 이름은 `df_pop202309` 로 지정합니다
++
+[%header, cols="2,1,1,1,1,1", width=80%]
+|===
+|행정구역	    |총인구수   |세대수	        |세대당인구	|남자인구수	|여자인구수
+|서울특별시	    |9,407,540	|4475726	    |2.10	|4552501	|4855039
+|부산광역시	    |3,300,836	|1565115	|2.11	|1609650	|1691186
+|대구광역시	    |2,377,801	|1092536	|2.18	|1168679	|1209122
+|인천광역시	    |2,987,918	|1344029	|2.22	|1494725	|1493193
+|광주광역시	    |1,422,999	|656061	|2.17	|702748	|720251
+|대전광역시	    |1,444,595	|680653	|2.12	|720520	|724075
+|울산광역시	    |1,104,167	|489298	|2.26	|567314	|536853
+|세종특별자치시	 |38,5932	|160479	|2.40	|192246	|193686
+|경기도	        |13,626,339	|5969573	|2.28	|6855626	|6770713
+|강원특별자치도	 |1,530,712	|760903	|2.01	|770130	|760582
+|충청북도	    |1,594,326	|779770	|2.04	|810835	|783491
+|충청남도	    |2,127,630	|1032336	|2.06	|1089884	|1037746
+|전라북도	    |1,758,661	|861647	|2.04	|875353	|883308
+|전라남도	    |1,807,295	|912090	|1.98	|910810	|896485
+|경상북도	    |2,559,924	|1282575	|2.00	|1292868	|1267056
+|경상남도	    |3,257,009	|1524861	|2.14	|1639932	|1617077
+|제주특별자치도	|676,317	|313265	|2.16	|338514	|337803
+|===
+
+== DataFrame 데이터 액세스
 
 * Column에 액세스 
 ** 하나의 column에 액세스 할 때는 list 또는 .['column_name'] 사용
@@ -282,140 +353,6 @@ df.loc['celine', ['nation', 'english']]
 df.iloc[0,0]
 ----
 
-== 집계 함수
-
-* 최대값
-+
-[source, python]
-----
-max(df2['math'])    # python의 max 함수
-df2['math'].max()   # DataFrame column의 max 함수
-df2.math.max()      # DataFrame column의 max 함수
-df2.max()           # DataFrame 모든 column의 최대값
-----
-* 최소값
-+
-[source, python]
-----
-min(df2['english'])     # python의 min 함수
-df2['english'].min()    # DataFrame column의 min 함수
-df2.english.min()       # DataFrame column의 min 함수
-df2.min()               # DataFrame 모든 column의 최소값
-----
-* 합
-+
-[source, python]
-----
-sum(df2['math'])    # python의 sum 함수
-df2['math'].sum()   # DataFrame column의 sum 함수
-df2.math.sum()      # DataFrame column의 sum 함수
-df.sum()            # 전체 DataFrame의 합계
-----
-* 평균 
-+
-[source, python]
-----
-sum(df2['math']) / len(df2) # 나누기
-df2['math'].mean()      # DataFrame column의 mean 함수
-df2.math.mean()         # DataFrame column의 mean 함수
-df2.mean()              # 전체 DataFrame의 평균
-----
-* 표준 편차
-+
-[source, python]
-----
-df2['math'].std()   # DataFrame column의 std 함수
-df2.math.std()      # DataFrame column의 std 함수
-df2.std()           # 전체 DataFrame의 표준편차
-----
-* 전체 데이터 설명
-+
-[source, python]
-----
-df2.describe()
-            math     english     science
-count   4.000000    4.000000    4.000000
-mean   57.500000   82.500000   80.000000
-std    33.040379   17.078251   33.665016
-min    20.000000   60.000000   30.000000
-25%    35.000000   75.000000   75.000000
-50%    60.000000   85.000000   95.000000
-75%    82.500000   92.500000  100.000000
-max    90.000000  100.000000  100.000000
-----
-
-== 연습문제
-
-* 아래 데이터를 Data Frame으로 작성하세요 
-+
-[%header, cols=3, width=40%]
-|===
-|product|price|sales_volume
-|Apple  |1800 | 24
-|Strawberry | 1500 |38
-|Watermelon | 3000 |13
-|===
-* 과일의 가격 평균과 판매량 평균을 구하세요
-
-== 외부 데이터 사용
-
-* excel 파일 적재 : read_excel 함수 사용
-+
-[source, python]
-----
-# 단순 파일 적재
-df_titanic = pd.read_excel('titanic.xls')
-# worksheet 적재
-df_titanic = pd.read_excel('titanic.xls', sheet_name='titanic3')
-df_titanic = pd.read_excel('titanic.xls', sheet_name=0) # worksheet index
-# header(컬럼 이름)이 없는 경우
-df_titanic = pd.read_excel('titanic.xls', header=None)
-----
-
-* csv 파일 적재 : read_csv 함수 사용
-+
-[source, python]
-----
-# 단순 파일 적재 (기본 구분자: ',')
-df_pop202309 = pd.read_csv('population202309.csv')
-# 구분자 사용
-df_pop202309 = pd.read_csv('population202309.csv', sep='|')
-----
-
-== 데이터 구조
-
-[%header, cols="1,2", width=50%]
-|===
-|함수|기능
-|head()|데이터의 앞부분 출력
-|tail()|데이터의 뒷부분 출력
-|shape |행, 열 개수 출력
-|info()|변수 속성 출력
-|describe()|요약 통계량 출력
-|===
-
-== 데이터 구조
-
-[source, python]
-----
-# 처음 지정된 개수의 row (기본값 5)
-df_pop202309.head()
-df_pop202309.head(10)
-
-# 마지막 지정된 개수의 row (기본값 5)
-df_pop202309.tail()
-df_pop202309.tail(15)
-
-# Data Frame의 메소드(함수)가 아닌 속성(Attribute)
-df_pop202309.shape
-
-# Data Frame의 컬럼 속성
-df_pop202309_info()
-
-# 요약 통계량
-df_pop202309.describe()
-----
-
 == 구조 변환 (column)
 
 * Data Frame 복사본 생성: _copy()_ 메소드
@@ -425,12 +362,15 @@ df_pop202309.describe()
 df_pop = df_pop202309.copy()
 ----
 +
-* 컬럼명 변경: _rename()_ 메소드
+* column명 변경
+** 하나 혹은 일부 column명 변경: _DataFrame_object.rename()_ 메소드
+** 모든 컬럼명 변경: _DataFrame_object.columns = [ list ]_
 +
 [source, python]
 ----
 df_pop = df_pop.rename(columns= {'행정구역':'district'})
 df_pop.rename(columns={'총인구수':'population','세대수':'household'}, inplace=True)
+df_pop.columns = 
 ----
 * 컬럼명 변경: 컬럼명 list
 +
@@ -441,7 +381,7 @@ df_pop.columns = ['district','population','household','pop_household','male','fe
 
 == 구조 변환 (index)
 
-* 인덱스 변환: 인덱스 list
+* 인덱스 변환: _DataFrame_object.index = [ list ]_
 +
 [source, python]
 ----
@@ -459,14 +399,11 @@ df_pop.loc['경기도']
 df_pop.dtypes
 ----
 
-* 컬럼 타입 변환: _astype_ 메소드
+* 컬럼 타입 변환: _DataFrame_object.column.astype_ 메소드
 +
 [source, python]
 ----
 df_pop['population'] = df_pop.population.str.replace(',','').astype('int')
-df_pop.household = df_pop.household.str.replace(',','').astype('int')
-df_pop.male = df_pop.male.str.replace(',','').astype('int')
-df_pop.female = df_pop.female.str.replace(',','').astype('int')
 ----
 
 == 컬럼 추가
@@ -494,19 +431,219 @@ df_pop2 = df_pop.drop('gender_ratio', axis=1)
 
 * 추가하려는 행 이름으로 loc 인덱서를 사용하고 데이터 값 또는 list를 값으로 사용 +
 +
-_DataFrame.loc['새 row 이름'] = 데이터 값 (또는 배열)_
+_#DataFrame_object.loc['새 row 이름'] = 데이터 값 (또는 배열)#_
 +
 [source, python]
 ----
-df.loc['Kurt'] = ['USA', 90,40,20]
+df_pop.loc['전국'] = [
+    df_pop.population.sum(), 
+    df_pop.household.sum(), 
+    round(df_pop.pop_household.mean(), 2), 
+    df_pop.male.sum(), 
+    df_pop.female.sum(),
+    0.0,
+    0.0]
 ----
 +
-[%header, cols=5, width=60%]
+[%header, cols="3,1,1,1,1,1,1,1", width=100%]
 |===
-|	    |nation	|english	|math	|science
-|Celine	|France	|90	|100	|100
-|James	|UK	    |80	|40	|30
-|Jason	|USA	|80	|40	|60
-|Hans	|Germany	|60	|50	|90
-|Kurt	|USA	|90	|40	|20
+|district	   |population |household  |pop_household  |male	   |female   |male_ratio   |female_ratio
+|서울특별시	    |9407540	|4475726	|2.10	        |4552501	|4855039  |48.39	    |51.61
+|부산광역시	    |3300836	|1565115	|2.11	        |1609650	|1691186  |48.76	    |51.24
+|대구광역시	    |2377801	|1092536	|2.18	        |1168679	|1209122  |49.15	    |50.85
+|인천광역시	    |2987918	|1344029	|2.22	        |1494725	|1493193  |50.03	|49.97
+|광주광역시	    |1422999	|656061	|2.17	|702748	|720251     |49.38	|50.62
+|대전광역시	    |1444595	|680653	|2.12	|720520	|724075     |49.88	|50.12
+|울산광역시	    |1104167	|489298	|2.26	|567314	|536853     |51.38	|48.62
+|세종특별자치시 |385932	|160479	|2.40	|192246	|193686     |49.81	|50.19
+|경기도	       |13626339	|5969573	|2.28	|6855626	|6770713    |50.31	|49.69
+|강원특별자치도 |1530712	|760903	|2.01	|770130	|760582     |50.31	|49.69
+|충청북도	   |1594326	|779770	|2.04	|810835	|783491     |50.86	|49.14
+|충청남도	   |2127630	|1032336	|2.06	|1089884	|1037746    |51.23	|48.77
+|전라북도	   |1758661	|861647	|2.04	|875353	|883308     |49.77	|50.23
+|전라남도	   |1807295	|912090	|1.98	|910810	|896485     |50.40	|49.60
+|경상북도	   |2559924	|1282575	|2.00	|1292868	|1267056    |50.50	|49.50
+|경상남도	   |3257009	|1524861	|2.14	|1639932	|1617077    |50.35	|49.65
+|제주특별자치도	|676317	|313265	|2.16	|338514	|337803 |50.05	|49.95
+|전국	       |51370001.0	|23900917.0	|2.13	|25592335.0	|25777666.0	|0.00	|0.00
 |===
+
+== Row 수정
+
+* cell의 값 수정
++
+_DataFrame_object.loc['index','male_ratio'] = value_
++
+[source, python]
+----
+df_pop.loc['전국','male_ratio'] = round(sum(df_pop.male) / sum(df_pop.population), 4) * 100
+df_pop.loc['전국','female_ratio'] = round(df_pop.female.mean() / df_pop.population.mean(), 4) * 100
+----
+
+== column, row 위치 변경
+
+* DataFrame의 column과 row의 위치를 바꿈
+** 선형 대수학의 전치행렬과 같은 개념
+** 전치의 결과로 새 DataFrame 객체 반환
++
+_DataFrame_object.transpose()_
++
+[source, python]
+----
+df_pop_trans = df_pop.transpose()
+df_pop_trans
+----
+
+
+== 정렬
+
+* index를 정수형 index로 초기화
++
+_DataFrame_object.reset_index()_
++
+[source, python]
+----
+df_pop.reset_index()
+----
++
+[%header, cols="1, 3,1,1,1,1,1,1,1", width=100%]
+|===
+| |district	   |population |household  |pop_household  |male	   |female   |male_ratio   |female_ratio
+|0|서울특별시	    |9407540	|4475726	|2.10	        |4552501	|4855039  |48.39	    |51.61
+|1|부산광역시	    |3300836	|1565115	|2.11	        |1609650	|1691186  |48.76	    |51.24
+|2|대구광역시	    |2377801	|1092536	|2.18	        |1168679	|1209122  |49.15	    |50.85
+|3|인천광역시	    |2987918	|1344029	|2.22	        |1494725	|1493193  |50.03	|49.97
+|4|광주광역시	    |1422999	|656061	|2.17	|702748	|720251     |49.38	|50.62
+|5|대전광역시	    |1444595	|680653	|2.12	|720520	|724075     |49.88	|50.12
+|6|울산광역시	    |1104167	|489298	|2.26	|567314	|536853     |51.38	|48.62
+|7|세종특별자치시 |385932	|160479	|2.40	|192246	|193686     |49.81	|50.19
+|8|경기도	       |13626339	|5969573	|2.28	|6855626	|6770713    |50.31	|49.69
+|9|강원특별자치도 |1530712	|760903	|2.01	|770130	|760582     |50.31	|49.69
+|10|충청북도	   |1594326	|779770	|2.04	|810835	|783491     |50.86	|49.14
+|11|충청남도	   |2127630	|1032336	|2.06	|1089884	|1037746    |51.23	|48.77
+|12|전라북도	   |1758661	|861647	|2.04	|875353	|883308     |49.77	|50.23
+|13|전라남도	   |1807295	|912090	|1.98	|910810	|896485     |50.40	|49.60
+|14|경상북도	   |2559924	|1282575	|2.00	|1292868	|1267056    |50.50	|49.50
+|15|경상남도	   |3257009	|1524861	|2.14	|1639932	|1617077    |50.35	|49.65
+|16|제주특별자치도	|676317	|313265	|2.16	|338514	|337803 |50.05	|49.95
+|17|전국	       |51370001.0	|23900917.0	|2.13	|25592335.0	|25777666.0	|0.00	|0.00
+|===
+
+* index를 기준으로 DataFrame 정렬
++
+_DataFrame_object.sort_index()_
++
+[source, python]
+----
+df_pop.sort_index(ascending=False, inplace=True)
+----
+
+* 값을 기준으로 DataFrame 정렬
++
+_DataFrame_object.sort_values()
++
+[source, python]
+----
+df_pop.sort_values(by='population', ascending=False, inplace=True)
+----
+
+== 산술 연산 
+
+* Pandas 산술 연산은 내부적으로 3단계 프로세스를 거침
+1. column/row 인덱스를 기준으로 모든 원소를 정렬
+2. 동일한 위치에 있는 원소끼리 1:1 로 대응
+3. 1:1 대응이 되는 원소끼리 연산을 처리 (대응되는 원소가 없으면 NaN 처리)
+
+== Series 산술 연산
+
+* Series와 숫자:
++
+_Series_object (+, -. / *) 숫자
++
+[source, python]
+----
+student1 = pd.Series({'국어': 100, '영어': 80, '수학': 90})
+----
++
+----
+국어    100
+영어     80
+수학     90
+dtype: int64
+----
++
+[source, python]
+----
+percentage = student1 /200
+----
++
+----
+국어    0.50
+영어    0.40
+수학    0.45
+dtype: float64
+----
+
+* Series와 Series
++
+[source, python]
+----
+student2 = pd.Series({'수학': 100, '국어': 80, '영어': 90})
+total = student1 + student2
+----
++
+----
+국어    180
+수학    190
+영어    170
+dtype: int64
+----
+
+== DataFrame 산술 연산
+
+* 시리즈 연산을 확장
+* column/row 인덱스를 기준으로 정렬 후 1:1 대응되는 원소끼리 연산을 처리
+
+=== DataFrame, 숫자
+
+* DataFrame에 어떤 숫자를 연산하면 모든 원소에 대해 연산을 수행
++
+[source, python]
+----
+df = pd.DataFrame({
+    'nation':   ['France','UK','USA','Germany'],
+    'english':  [90,80,80,60],
+    'math':     [100,40,40,50],
+    'science':  [100,30,60,90]
+})
+df.index = ['Celine','James','Jason','Hans']
+----
++
+[%header, cols=5, width=40%]
+|===
+|       |nation |english    |math   |science
+|Celine |France |90         |100    |100
+|James  |UK     |80         |40     |30
+|Jason  |USA    |20         |40     |60
+|Hans   |Germany|40         |50     |90
+|===
++
+[source, python]
+----
+df2 = df[['english', 'math','science']] + 10
+----
++
+[%header, cols=5, width=40%]
+|===
+|       |nation |english    |math   |science
+|Celine |France |100        |110    |110
+|James  |UK     |90         |50     |20
+|Jason  |USA    |30         |50     |70
+|Hans   |Germany|50         |60     |100
+|===
+
+=== DataFrame, DataFrame
+
+* 각 DataFrame의 같은 column, 같은 row에 있는 원소끼리 계산
+* 동일한 원소끼리 계산한 값을 원래 위치에 다시 입력하여 새 DataFrame을 생성
+* 어느 한쪽에 원소가 존재하지 않거나 NaN이면 연산 결과는 NaN으로 처리됨

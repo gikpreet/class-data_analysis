@@ -1,0 +1,24 @@
+== 외부 데이터 사용
+
+* excel 파일 적재 : read_excel 함수 사용
++
+[source, python]
+----
+# 단순 파일 적재
+df_titanic = pd.read_excel('titanic.xls')
+# worksheet 적재
+df_titanic = pd.read_excel('titanic.xls', sheet_name='titanic3')
+df_titanic = pd.read_excel('titanic.xls', sheet_name=0) # worksheet index
+# header(컬럼 이름)이 없는 경우
+df_titanic = pd.read_excel('titanic.xls', header=None)
+----
+
+* csv 파일 적재 : read_csv 함수 사용
++
+[source, python]
+----
+# 단순 파일 적재 (기본 구분자: ',')
+df_pop202309 = pd.read_csv('population202309.csv')
+# 구분자 사용
+df_pop202309 = pd.read_csv('population202309.csv', sep='|')
+----
