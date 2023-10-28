@@ -647,3 +647,5 @@ df2 = df[['english', 'math','science']] + 10
 * 각 DataFrame의 같은 column, 같은 row에 있는 원소끼리 계산
 * 동일한 원소끼리 계산한 값을 원래 위치에 다시 입력하여 새 DataFrame을 생성
 * 어느 한쪽에 원소가 존재하지 않거나 NaN이면 연산 결과는 NaN으로 처리됨
+
+image:./images/image08.png[]
