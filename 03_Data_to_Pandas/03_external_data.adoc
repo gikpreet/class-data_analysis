@@ -94,3 +94,198 @@ _pandas.read_html('URL 또는 html 파일이름')_
 boxoffices = pd.read_html('https://movie.datamotion.co.kr/Boxoffice')
 df_boxoffice = boxoffices[1]
 ----
+
+== 데이터 저장
+
+=== CSV 저장
+* Pandas DataFrame은 2차원 배열로 데이터
+* 2차원 구조를 가진 csv 형태로 저장할 수 있음
++
+_DataFrame_object.to_csv('file_name')_
++
+[source, python]
+----
+df_boxoffice.to_csv('boxoffice.csv')
+----
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|path_or_buf|csv파일이 생성되는 경로와 파일명 입니다.
+|sep|csv 파일의 구분자 입니다. 기본값은 ' , ' 입니다.
+|na_rep|결측값을 어떻게 출력할지 지정할 수 있습니다. 기본값은 공백 입니다.
+|float_format|부동소수점의 경우 어떤 형식으로 출력할지 지정할 수 있습니다.
+|columns|출력할 열을 지정하는 인수 입니다.
+|header|열 이름을 설정합니다. False일 경우 열 이름을 출력하지 않습니다.
+|index|인덱스의 출력 여부 입니다. False일 경우 인덱스를 출력하지 않습니다.
+|index_label|인덱스의 레이블(인덱스명)을 설정합니다.
+|mode|{'w' / 'a'} 쓰기 모드를 지정합니다. a로 지정할 경우 기존 파일 아래에 값을 추가하여 입력하게됩니다.
+|encoding|인코딩 설정입니다. 기본값은 utf-8입니다.
+|compression|{‘infer’, ‘gzip’, ‘bz2’, ‘zip’, ‘xz’, None} 압축 설정을 지정합니다. 기본값은 'infer'로 적절한 압축형식을 추론합니다.
+|quoting|값에 대해서 인용구 설정을 할 수 있습니다. 어떤 값에 대해서 인용구를 설정할지는 아래와 같습니다. +
+{0 : MINIMAL 문자와 특수문자 / 1 : ALL 모든필드 / 2 : NONNUMERIC 숫자가 아닌것 / 3 : NONE 안함}
+|quotechar|quoting에서 지정한 인용구에 대해서 인용구에 사용할 문자를 지정합니다. 기본값은 쌍따옴표 입니다.
+|chunksize|한번에 불러올 행의 수를 지정합니다. 예를들어 100을 입력할 경우 한번에 100행씩 변환합니다. 속도 향상에 기여합니다.
+|date_format|값이 시계열(datetime) 데이터인 경우 그 값의 포맷을 지정합니다.(예 : '%Y-%m')
+|doublequoto|값중에 quotechar과 같은 값이 있을때, 그 값을 인용구 처리할지의 여부 입니다.
+|escapechar|doublequoto=False인 경우 인용구와 중복되는 그 값을 어떤 값으로 변경할지 여부입니다.
+|decimal|자리수로 쓰이는 문자를 지정합니다.즉, 100,000의 경우 decimal="."으로 할 경우100.000으로 표시합니다.
+|errors|인코딩 오류에 대해서 오류 처리를 정할 수 있습니다. 가능한 값은 아래와 같습니다. +
+{strict : 인코딩 오류에 ValueError 발생 / ignore : 무시 / replace 잘못된 데이터를 대체마커 '?' 지정 / ...}
+더 많은 값에 대해서는 python library 의 strict 문서를 참고합니다.
+|storage_options|특정 스토리지 연결에 적합한 추가 옵션, 예: 호스트, 포트, 사용자 이름, 비밀번호 등을 지정합니다.
+|===
+
+=== JSON 저장
+
+* JSON 구조를 가진 파일로 저장할 수 있음
++
+_DataFrame_object.to_json('file_name')_
+[source, python]
+----
+df_boxoffice.to_json('boxoffice.json')
+----
+
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|path_or_buf|json파일이 생성되는 경로와 파일명 입니다.
+|orient|JSON 포맷을 지정합니다. +
+Series:
+default is ‘index’ allowed values are: {‘split’, ‘records’, ‘index’, ‘table’}.
+
+DataFrame: default is ‘columns’ allowed values are: {‘split’, ‘records’, ‘index’, ‘columns’, ‘values’, ‘table’}.
+
+The format of the JSON string: +
+‘split’ : dict like {‘index’ -> [index], ‘columns’ -> [columns], ‘data’ -> [values]} +
+‘records’ : list like [{column -> value}, … , {column -> value}] +
+‘index’ : dict like {index -> {column -> value}} +
+‘columns’ : dict like {column -> {index -> value}} +
+‘values’ : just the values array +
+‘table’ : dict like {‘schema’: {schema}, ‘data’: {data}} +
+Describing the data, where data component is like orient='records'.
+|date_format|날짜 형식을 지정합니다
+|double_presion|부동 소수점 값을 인코딩할 때 사용할 소수 자릿수를 지정합니다. 기본 값은 10이며, 최대값은 15입니다.
+|force_ascii|인코딩된 문자열을 ASCII로 표시할지를 결정합니다. 기본값은 True 입니다.
+|date_unit|인코딩할 시간 단위를 기록합니다.
+|line| 'orient' 옵션이 'records'로 지장된 경우 줄로 구분된 JSON 형식을 작성합니다. 기본 값은 False입니다.
+|compress|출력 데이터를 압축할 지 여부를 결정합니다.
+|index|인덱스는 'orient'가 'split', 'index', 'column' 또는 'table'인 경우에만 사용됩니다. 이 중 'index'와 'column'은 index=False를 지원하지 않습니다.
+|indent|각 레코드를 들여쓰기 하는데 사용되는 공백의 길이를 지정합니다.
+|Storage_option|특정 스토리지 연결에 적합한 추가 옵션(예: 호스트, 포트, 사용자 이름, 비밀번호 등). HTTP(S) URL의 경우 키-값 쌍이 헤더 옵션으로 전달됩니다 urllib.request.Request. 다른 URL(예: 's3://' 및 'gcs://'로 시작)의 경우 키-값 쌍이 로 전달됩니다 
+|mode|path_or_buf를 제공할 때 출력에 대한 IO 모드를 지정합니다. 허용되는 인수는 'w'(쓰기) 및 'a'(추가)뿐입니다. mode='a'는 line이 True이고 orient가 'records'인 경우에만 지원됩니다. 기본값은 w 입니다.
+|===
+
+== Microsoft Excel 저장
+
+* DataFrame의 column과 row는 Excel 파일의 column과 row로 1:1로 대응됨
+* openpyxl 라이브러리가 필요함 (anaconda에서 미리 설치)
++
+_DataFrame_object_to_excel('file_name')_
+
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|excel_writer|경로와 파일 이름을 설정하거나 ExcelWriter 객체를 지정합니다.
+|sheet_name|시트 이름을 설정해줍니다. 중복인 경우 덮어씌워집니다.
+|na_rep|결측치를 대체할 값을 설정합니다. 기본값은 공백(" ") 입니다.
+|float_format|부동소수점의 표현방식을 지정합니다.
+|columns|엑셀로 변환할 열을 지정합니다.
+|header|열 이름을 설정합니다. None인 경우에는 열이름을 출력하지 않습니다.
+|index|index의 출력 여부를 정합니다.
+|index_label|index명을 지정합니다. Multi Index의 경우 리스트 형식으로 지정해주어야합니다.
+|startrow / startcol|값이 입력되는 위치를 지정합니다.
+|engine|사용할 엔진을 지정합니다. 'openpyxl' 또는 'xlsxwriter'. io.excel.xlsx.writer, io.excel.xls.writer 및 io.excel.xlsm.writer 옵션을 통해 이를 설정할 수도 있습니다. 
+|merge_cells|Index가 중복인 경우 엑셀로 변환시 병합할지 정합니다. 기본값은 True로 병합이 됩니다.
+|encoding|결과 엑셀파일의 인코딩을 지정합니다. xlwt에만 필요하며 다른 경우는 기본 유니코드를 지원합니다.
+|inf_rep|엑셀은 기본적으로 무한에대한 표시형식이 없기때문에, 무한인 값을 어떻게 표시할지 정합니다. 기본값은 'inf' 입니다.
+|vervose|오류 로그에 추가 정보를 표시할지 여부입니다. 기본값은 True입니다.
+|freeze_panes|틀고정을 지정합니다. 튜플로 (값, 값) 형태로 지정합니다.
+|storage_options|특정 스토리지 연결에 적합한 추가 옵션을 지정합니다. (예 : 호스트, 포트, 사용자 이름, 비밀번호 등)
+|===
+
+== HTML 저장
+
+* DataFrame 객체를 Html 형식 파일로 저장
++
+_DataFrame_object.to_html('file_name')_
++
+[source, python]
+----
+df_boxoffice.to_html('boxoffice.html')
+----
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|buf|저장할 버퍼 입니다. None이면 문자열로 출력됩니다.
+|columns|출력할 열을 지정합니다.
+|col_space|열 너비를 지정합니다. 픽셀 단위 입니다.
+|header / index|열/행 레이블의 출력 여부 입니다. False이면 출력하지 않습니다.
+|na_rep|결측값의 표현 방식 입니다.
+|formatters|포매터 함수를 통해 값의 포맷을 설정합니다. .format() 메서드도 사용 가능합니다.
+|float_format|소수점 단위 자리수를 지정합니다. 기본은 마침표( . ) 입니다. sparsify : 각 행의 모든 다중 인덱스 키를 인쇄하려면 계층적 인덱스가 있는 DataFrame에 대해 False로 설정합니다.
+|index_names|인덱스명을 출력할지를 정합니다.
+|justify|정렬 방식을 지정합니다.
+|maxrows|최대 출력할 줄 수를 지정합니다. 초과되는 줄은 ( ... )형태로 축약됩니다.
+|maxcols|최대 출력할 열 수를 지정합니다. 초과되는 줄은 ( ... )형태로 축약됩니다.
+|minrow|maxrows로인해 잘린 표현을 표시할 수 입니다.
+|show_dimensions|출력된 html 객체 아래에 데이터 객체의 차원을 출력합니다.
+|decimal|1000단위 구분기호로 인식되는 문자를 지정합니다.
+|bold_rows|출력에서 행 레이블을 굵게할지 여부입니다. 기본은 True입니다.
+|classes| 결과 html의 table에 적용할 css 클래스를 지정합니다.
+|escape|문자 <, > 및 &를 HTML 안전 시퀀스로 변환합니다. 즉 문자를 HTML 문법이 아닌 문자 그대로 출력합니다.
+|notebook|생성된 HTML이 IPython Notebook용인지 여부입니다. 기본은 False입니다.
+|border|테두리의 두께를 지정합니다.
+|encoding|인코딩을 지정합니다.
+|table_id|css의 table id를 설정합니다.
+|render_links|url을 html 링크로 변환합니다.
+|===
+
+== Markdown 저장
+
+* DataFrame 객체를 Markdown 형식 문서로 저장합니다.
++
+_DataFrame_object.to_markdown('file_nanme')_
++
+[source, python]
+----
+df_boxoffice.to_markdown('boxoffice.md')
+----
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|buf|쓸 버퍼입니다. 입력하지 않으면 문자열이 반환됩니다.
+|mode|파일을 열때 모드입니다. 기본값은 'wt'입니다.
+|index|인덱스를 출력할지 여부입니다. 기본값은 True입니다.
+|storage_options|특정 스토리지 연결에 적합한 추가 옵션을 지정합니다. (예 : 호스트, 포트, 사용자 이름, 비밀번호 등)
+|kwargs|추가 적용 가능한 tabulate의 키워드입니다.
+|===
+
+== 연습 문제
+
+* 아래 코드로 HTML 원본에서 얻은 DataFrame을 가공해서 분석 가능한 형태로 만드세요
++
+[source, python]
+----
+boxoffices = pd.read_html('https://movie.datamotion.co.kr/Boxoffice')
+df_boxoffice = boxoffices[1]
+----
+
+* 인덱스를 '순위'로 지장합니다.
+* 컬럼 이름을 아래와 같이 지정합니다.
+** rank
+** MovieTitle (개봉 연도를 포함하지 않음)
+** Year
+** WWBoxOffice
+** DomesticBoxOffice
+** DomesticPercentage
+** Budget
