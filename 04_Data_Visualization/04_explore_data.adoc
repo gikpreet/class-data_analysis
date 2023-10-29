@@ -215,15 +215,16 @@ df_car[['mpg','weight']].corr()
 df_car.describe()
 ----
 
-== 연습문제
+== Pandas 그래프 도구
 
-* 아래 데이터를 Data Frame으로 작성하세요 
-+
-[%header, cols=3, width=40%]
-|===
-|product|price|sales_volume
-|Apple  |1800 | 24
-|Strawberry | 1500 |38
-|Watermelon | 3000 |13
-|===
-* 과일의 가격 평균과 판매량 평균을 구하세요
+* Pandas는 내장 그래프 도구를 제공
+* 선 그래프 +
+_DataFrame_object.plot()_
+* 막대 그래프 +
+_DataFrame_object.plot(kind='bar')_
+* 히스토그램 +
+_DataFrame_object.plot(kind='hist')_
+* 산점도 +
+_DataFrame_object.plot(x='column_name', y='column_name', kind='scatter')_
+* 박스 플롯 +
+_DataFrame_object.plot(kind='box')_
