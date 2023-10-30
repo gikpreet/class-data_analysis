@@ -272,7 +272,7 @@ image:./images/image03.png[]
 
 * plot 함수의 kind 파라미터에 hist 옵션 사용
 +
-_DataFrame_object.plot(kind='hist')
+_DataFrame_object.plot(kind='hist')_
 +
 [source, python]
 ----
@@ -280,3 +280,30 @@ df_ns_trans.plot(kind='hist')
 ----
 +
 image:./images/image04.png[]
+
+== 산점도
+
+* plot 함수의 kind 파라미터에 scatter 옵션 사용
++
+_DataFrame_object.plot(kind='scatter')_
++
+[source, python]
+----
+df_car.plot(x='weight', y='mpg', kind='scatter')
+----
++
+image:./images/image05.png[]
+
+== 박스 플롯
+
+* 특정 변수의 데이터 분포와 분산 정도에 대한 정보제공
+* plot 함수의 kind 파라미터에 box 옵션 사용
++
+_DataFrame_object.plot(kind='box')_
++
+[source, python]
+----
+df_car[['mpg', 'cylinders']].plot(kind='box')
+----
++
+image:./images/image06.png[]
