@@ -228,3 +228,55 @@ _DataFrame_object.plot(kind='hist')_
 _DataFrame_object.plot(x='column_name', y='column_name', kind='scatter')_
 * 박스 플롯 +
 _DataFrame_object.plot(kind='box')_
+
+=== 선 그래프
+
+* 가장 기본적인 그래프
+* plot() 함수를 파라미터 없이 호출
++
+_DataFrame_object.plot()_
++
+[source, python]
+----
+df_gen = pd.read_excel('남북한발전전력량.xlsx')
+df_ns = df_gen.iloc[[0, 5], 3:]
+df_ns.index = ['South','North']
+df_ns.columns = df_ns.columns.map(int)
+df_ns.plot()
+----
++
+image:./images/image01.png[]
++
+[source, python]
+----
+df_ns_trans = df_ns.transpose()
+df_ns_trans.plot()
+----
++
+image:./images/image02.png[]
+
+== 막대 그래프
+
+* plot 함수의 kind 파라미터에 bar 옵션 사용
++
+_DataFrame_object.plot(kind='bar')
++
+[source, python]
+----
+df_ns_trans.plot(kind='bar')
+----
++
+image:./images/image03.png[]
+
+== 히스토그램
+
+* plot 함수의 kind 파라미터에 hist 옵션 사용
++
+_DataFrame_object.plot(kind='hist')
++
+[source, python]
+----
+df_ns_trans.plot(kind='hist')
+----
++
+image:./images/image04.png[]
