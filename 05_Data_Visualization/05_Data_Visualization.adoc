@@ -59,3 +59,71 @@ plt.xlabel('기간')
 plt.ylabel('이동 인구수')
 plt.show()
 ----
+
+=== 그래프 설정
+
+* 그래프 크기 설정 +
+_plt.figure(figsize=(horizontal_inch, vertical_inch))_
+* 눈금 라벨 회전 +
+_plt.xticks(rotation='vertical')_
+
+image:./images/image02.png[]
+
+[source, python]
+----
+plt.figure(figsize=(14, 5))
+plt.xticks(rotation='vertical')
+plt.plot(sr_one)
+plt.title('경기도 -> 서울 이동 인구')
+plt.xlabel('기간')
+plt.ylabel('이동 인구수')
+plt.show()
+----
+
+image:./images/image03.png[]
+
+=== 스타일 적용
+
+* 색, 폰트 등 디자인 요소를 사전에 지정된 스타일로 일괄 변경
+* Matplotlib 실행 환경을 변경하므로, 설정 후 모든 그래프에 적용
+* 기본 값은 'default'
++
+_plt.style.use('style_name')_
+
+image:./images/image04.png[]
+
+> 참고 https://matplotlib.org/stable/users/prev_whats_new/dflt_style_changes.html
+
+=== 화면 분할, 여러개 그래프 작성
+
+* axe 객체를 사용하여 분할된 화면마다 axe 객체를 하나씩 배정
+* axe 객체는 각각 서로 다른 그래프를 표현할 수 있음
++
+[source, python]
+----
+# 그래프 객체 생성(figure에 2개의 서브 플롯 생성)
+fig = plt.figure(figsize=(10, 10))
+# add_subplot(row 크기, column 크기, 서브 플롯 순서)
+ax1 = fig.add_subplot(2, 1, 1)
+ax2 = fig.add_subplot(2, 1, 2)
+
+# axe 객체에 plot 함수로 그래프 출력
+ax1.plot(sr_one, marker='o', markersize=10, linewidth=0)
+ax2.plot(sr_one, marker='+', markerfacecolor='green',markersize=10, color='olive', linewidth=2, label='서울->경기')
+ax2.legend(loc='best')
+
+# y축 범위 지정
+ax1.set_ylim(50000, 800000)
+ax2.set_ylim(50000, 800000)
+
+# 축 눈금 라벨 지정 및 75도 회전
+ax1.set_xticklabels(sr_one.index, rotation=75)
+ax2.set_xticklabels(sr_one.index, rotation=75)
+
+plt.show()
+----
+
+image:./images/image05.png[]
+
+=== 여러 그래프
+

@@ -431,7 +431,7 @@ df_pop2 = df_pop.drop('gender_ratio', axis=1)
 
 * 추가하려는 행 이름으로 loc 인덱서를 사용하고 데이터 값 또는 list를 값으로 사용 +
 +
-_#DataFrame_object.loc['새 row 이름'] = 데이터 값 (또는 배열)#_
+_DataFrame_object.loc['새 row 이름'] = 데이터 값 (또는 배열)#_
 +
 [source, python]
 ----

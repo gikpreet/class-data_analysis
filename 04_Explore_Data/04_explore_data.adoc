@@ -68,7 +68,7 @@ df_car.info()
 
 == 데이터 개수
 
-[%header, cols="1,2", width=50%]
+[%header, cols="1,2", width=80%]
 |===
 |함수|기능
 |count()| row 수 출력
