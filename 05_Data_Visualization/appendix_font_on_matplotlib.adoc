@@ -1,0 +1,26 @@
+= Ubuntu에에서 matplotlib 한글 설정
+
+이 문서에서는 Ubuntu 운영체제에서 matplotlib 한글을 설정하는 방법에 대해 설명합니다. 이 문서에서는 NHN Corporation에서 배포한 나눔 고딕 폰트를 사용합니다. 아래 절차에 따릅니다.
+
+1. 터미널을 실행합니다.
+2. 아래 명령을 실행하여 나눔 폰트를 설정합니다.
++
+----
+$ sudo apt install fonts-nanum*
+----
++
+3. 아래 명령을 실행하여 폰트 캐시를 갱신합니다.
++
+----
+$ sudo fc-cache -fv
+----
+4. 아래 명령을 실행하여 시스템에 나눔폰트가 설치되었는지 확인합니다.
++
+----
+$ sudo fc-list | grep nanum
+----
+5. 아래 명령을 실행하여 matplotlib 라이브러리 캐시를 삭제합니다.
++
+----
+$ rm -rf ~/.cache/matplotlib/*
+6. matplotlib 라이브러리에서 확인합니다.

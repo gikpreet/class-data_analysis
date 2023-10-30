@@ -45,4 +45,17 @@ plt.plot(sr_one.index, sr_one.values)
 +
 image:./images/image01.png[]
 
+=== 차트 제목, 축 이름 추가
 
+* 차트 제목에는 title() 함수 사용
+* x, y 축 제목을 위해 xlabel(), ylabel() 함수를 사용
+
+[source, python]
+----
+plt.plot(sr_one.index, sr_one.values)
+plt.plot(sr_one)
+plt.title('경기도 -> 서울 이동 인구')
+plt.xlabel('기간')
+plt.ylabel('이동 인구수')
+plt.show()
+----
