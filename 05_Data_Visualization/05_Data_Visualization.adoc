@@ -378,7 +378,7 @@ df_welpare_raw = pd.read_spss('file_name')
 * Matplotlib의 기능과 스타일을 확장한 Python 시각화 도구의 고급 버전
 * 비교적 단순한 인터페이스
 
-== Sample Data
+=== Sample Data
 
 * seaborn에 기본 탑재된 titanic 데이터셋 사용
 
@@ -388,7 +388,7 @@ df_titanic = sns.load_dataset('titanic')
 df_titanic.head()
 ----
 
-== 산점도
+=== 산점도
 
 * 2개의 연속 변수 사이의 산점도 및 선형 회귀 분석에 의한 회귀선 표시
 * regplot() 함수
@@ -401,7 +401,7 @@ sns.regplot(x='age',y='fare',data=df_titanic)
 
 image:./images/image15.png[]
 
-== 히스토그램
+=== 히스토그램
 
 * distplot() 함수
 
@@ -422,3 +422,197 @@ ax3.set_title('요금 - hist')
 ----
 
 image:./images/image16.png[]
+
+=== 히트맵
+
+* 2개의 범주형 변수를 각각 x, y 축에 놓고 데이터를 매트릭스 형태로 분류
+* 피봇 테이블로 정리한 후 heatmap() 함수 사용
+
+[source, python]
+----
+table = df_titanic.pivot_table(index=['sex'], columns=['class'], aggfunc='size')
+sns.heatmap(table,
+            annot=True, fmt='d',
+            cbar=True)
+----
+
+image:./images/image17.png[]
+
+=== 막대 그래프
+
+* barplot() 함수 사용
+
+[source, python]
+----
+fig = plt.figure(figsize=(15,5))
+ax1 = fig.add_subplot(1,3,1)
+ax2 = fig.add_subplot(1,3,2)
+ax3 = fig.add_subplot(1,3,3)
+
+sns.barplot(x='sex', y='survived', data=df_titanic, ax=ax1)
+sns.barplot(x='sex', y='survived', hue='class', data=df_titanic, ax=ax2)
+sns.barplot(x='sex', y='survived', hue='class', dodge=False, data=df_titanic, ax=ax3)
+
+ax1.set_title('타이타닉 생존자 - 성별')
+ax2.set_title('타이타닉 생존자 - 성별/객실등급')
+ax3.set_title('타이타닉 생존자 - 성별/객실등급(stacked)')
+----
+
+image:./images/image18.png[]
+
+=== 빈도 그래프
+
+* 각 범주에 속하는 데이터의 개수를 막대 그래프로 나타냄
+* countplot() 함수 사용
+
+[source, python]
+----
+fig = plt.figure(figsize=(15,5))
+ax1 = fig.add_subplot(1,3,1)
+ax2 = fig.add_subplot(1,3,2)
+ax3 = fig.add_subplot(1,3,3)
+
+sns.countplot(x='class', palette='Set1',data=df_titanic, ax=ax1)
+sns.countplot(x='class', hue='who', palette='Set1',data=df_titanic, ax=ax2)
+sns.countplot(x='class', hue='who', palette='Set1',dodge=False,data=df_titanic, ax=ax3)
+
+ax1.set_title('객실 등급')
+ax2.set_title('객실 등급 - who')
+ax3.set_title('객실 등급 - who(stacked)')
+
+plt.show()
+----
+
+image:./images/image19.png[]
+
+=== 박스플롯/바이올린 그래프
+
+* 박스 플롯만으로는 데이터 분산의 정도를 정확하게 알기 어려움
+* 커널 밀도 함수 그래프를 y 축에 추가하여 바이올린 그래프를 표시할 수 있음
+* violinplot() 함수 사용
+
+[source, python]
+----
+fig = plt.figure(figsize=(15,10))
+ax1 = fig.add_subplot(2,2,1)
+ax2 = fig.add_subplot(2,2,2)
+ax3 = fig.add_subplot(2,2,3)
+ax4 = fig.add_subplot(2,2,4)
+
+sns.boxplot(x='alive',y='age',data=df_titanic,ax=ax1)
+sns.boxplot(x='alive',y='age',hue='sex',data=df_titanic,ax=ax2)
+sns.violinplot(x='alive',y='age',data=df_titanic,ax=ax3)
+sns.violinplot(x='alive',y='age',hue='sex',data=df_titanic,ax=ax4)
+
+plt.show()
+----
+
+image:./images/image20.png[]
+
+=== 조인트 그래프
+
+* 산점도를 기본으로 표시하고, x-y 축의 각 변수에 대한 히스토그램을 동시에 보여줌
+* 두 변수의 관계와 데이터가 분산되어 있는 정도를 파악하기 쉬움
+* jointplot() 함수 사용
+
+[source, python]
+----
+j1 = sns.jointplot(x='fare',y='age',data=df_titanic)
+j2 = sns.jointplot(x='fare',y='age',kind='reg',data=df_titanic)
+j3 = sns.jointplot(x='fare',y='age',kind='hex',data=df_titanic)
+j4 = sns.jointplot(x='fare',y='age',kind='kde',data=df_titanic)
+
+j1.fig.suptitle('타이타닉 요금 - scatter', size=15)
+j2.fig.suptitle('타이타닉 요금 - reg', size=15)
+j3.fig.suptitle('타이타닉 요금 - hex', size=15)
+j4.fig.suptitle('타이타닉 요금 - kde', size=15)
+----
+
+== Forum 라이브러리
+
+* Forum 라이브러리는 지도를 시각화할 때 유용함
+* 라이브러리 설치
++
+----
+$ conda install -c conda-forge folium
+----
+
+[source, python]
+----
+import folium
+
+seoulmap = folium.Map(location=[37.55,126.98], zoom_start=12)
+seoulmap.show_in_browser()
+----
+
+image:./images/image21.png[]
+
+=== 마커를 사용해서 위치 표시
+
+[source, python]
+----
+map = folium.Map(location=[35.235,128.8664], zoom_start=15)
+
+folium.Marker(
+    location=[35.235,128.8664],
+    popup="NHN 아카데미 경남캠퍼스",
+    icon=folium.Icon(icon="green"),
+).add_to(map)
+
+folium.Marker(
+    location=[35.1403,126.9339],
+    popup="NHN 아카데미 광주캠퍼스",
+    icon=folium.Icon(icon="green"),
+).add_to(map)
+
+folium.Marker(
+    location=[36.3677,127.3445],
+    popup="NHN 아카데미 대전캠퍼스",
+    icon=folium.Icon(icon="green"),
+).add_to(map)
+
+map.show_in_browser()
+----
+
+image:./images/image22.png[]
+
+=== 지도 영역에 단계구분도 표시
+
+* 지도상의 경계에 둘러싸인 영역에 색을 칠하거나 음영으로 정보 표시
+
+[source, python]
+----
+import json
+
+df = pd.read_excel('경기도인구데이터.xlsx', index_col='구분')
+df.columns = df.columns.map(str)
+
+# 경기도 시군구 경계 정보를 가진 geo-json 파일 불러오기
+geo_path = './경기도행정구역경계.json'
+try:
+    geo_data = json.load(open(geo_path, encoding='utf-8'))
+except:
+    geo_data = json.load(open(geo_path, encoding='utf-8-sig'))
+
+# 경기도 지도 만들기
+g_map = folium.Map(location=[37.5502,126.982], 
+                   tiles='Stamen Terrain', zoom_start=9)
+
+# 출력할 연도 선택 (2007 ~ 2017년 중에서 선택)
+year = '2017'  
+
+# Choropleth 클래스로 단계구분도 표시하기
+folium.Choropleth(geo_data=geo_data,    # 지도 경계
+                 data = df[year],      # 표시하려는 데이터
+                 columns = [df.index, df[year]],  # 열 지정
+                 fill_color='YlOrRd', fill_opacity=0.7, line_opacity=0.3,
+                 threshold_scale=[10000, 100000, 300000, 500000, 700000],               
+                 key_on='feature.properties.name',
+                 ).add_to(g_map)
+
+g_map.show_in_browser()
+# 지도를 HTML 파일로 저장하기
+# g_map.save('./gyonggi_population_' + year + '.html')
+----
+
+image:./images/image23.png[]

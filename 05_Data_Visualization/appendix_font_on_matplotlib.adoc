@@ -23,4 +23,5 @@ $ sudo fc-list | grep nanum
 +
 ----
 $ rm -rf ~/.cache/matplotlib/*
+----
 6. matplotlib 라이브러리에서 확인합니다.
