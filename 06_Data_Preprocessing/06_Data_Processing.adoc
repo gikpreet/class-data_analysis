@@ -173,3 +173,20 @@ df_titanic.embark_town.fillna(method='ffill', inplace=True)
 * DataFrame에서 각 행은 분석 대상이 가지고 있는 모든 속성에 대한 관측값을 뜻함
 * 데이터셋에서 동일한 관측값이 2개 이상 중복되는 경우 중복 데이터를 찾아서 삭제해야 함
 * 중복된 데이터는 분석을 왜곡함
+
+=== 중복 데이터 확인
+
+* duplicate() 메소드 사용
+* 전에 나온 행들과 비교하여 중복되는 row면 True를 아니면 False를 반환함
+* DataFrame에 duplicate() 메소드를 적용하면 각 row의 중복 여부를 나타내는 boolean Series를 반환
+
+[source, python]
+----
+df = pd.DataFrame({
+    'c1':['a','a','b','a','b'],
+    'c2':[1,1,1,2,2],
+    'c3':[1,1,1,2,2]
+})
+
+df_dup = df.duplicated()
+----
