@@ -127,3 +127,203 @@ image:./images/image05.png[]
 
 === 여러 그래프
 
+* 단일 캔버스에 여러 그래프를 표시할 수 있음
+* 단일 axe 객체에 여러 Series를 표시
++
+[source, python]
+----
+col_years = list(map(str, range(1970, 2018)))
+df_2 = df_seoul.loc[['부산광역시','경상남도','대구광역시','경상북도'], col_years]
+
+years = list(map(str, range(1970, 1981)))
+df_2.loc['대구광역시', years] = 0
+
+plt.style.use('ggplot')
+
+fig = plt.figure(figsize=(20, 5))
+ax = fig.add_subplot(1, 1, 1)
+
+ax.plot(df_2.loc['부산광역시'], label='서울->부산', marker='*')
+ax.plot(df_2.loc['경상남도'], label='서울->경남', marker='*')
+ax.plot(df_2.loc['대구광역시'], label='서울->대구', marker='*')
+ax.plot(df_2.loc['경상북도'], label='서울->경북', marker='*')
+
+ax.legend(loc='best')
+
+plt.show()
+----
+
+image:./images/image06.png[]
+
+== 면적 그래프(area plot)
+
+* 선 그래프에서, 선 그래프와 x 축 사이의 공간에 색이 입혀지는 행태의 그래프
+* 기본적으로 그래프를 누적하여 표시함
+* plot(kind='area') 옵션으로 표시
++
+[source, python]
+----
+col_years = list(map(str, range(1970, 2018)))
+df_3 = df_seoul.loc[['충청남도','경상북도','강원도','전라남도'], col_years]
+df_4 = df_3.transpose()
+
+plt.style.use('ggplot')
+
+#df_4.index = df_4.index.map(int)
+df_4.plot(kind='area', stacked=False, alpha=0.2, figsize=(20, 10))
+
+plt.title('서울->타시도 인구 이동', size=30)
+plt.ylabel('이동 인구수', size=20)
+plt.xlabel('기간', size=20)
+plt.legend(loc='best',fontsize=15)
+
+plt.show()
+----
+
+image:./images/image07.png[]
+
+== 막대 그래프(bar plot)
+
+* 데이터 값의 크기에 비례하여 높이를 갖는 직사각형 막대로 표현
+* 막대 높이의 상대적 길이 차이를 통해 값의 크고 작음을 설명
+* plot(kind='bar') 옵션으로 표시
+
+image:./images/image08.png[]
+
+=== 가로형 막대 그래프
+
+* plot(kind='barh') 옵션으로 표시
++
+[source, python]
+----
+col_years = list(map(str, range(2010, 2018)))
+df_3 = df_seoul.loc[['충청남도','경상북도','강원도','전라남도'], col_years]
+df_4 = df_3.transpose()
+
+df_4['합계'] = df_4.sum(axis=1)
+
+df_total = df_4[['합계']].sort_values(by='합계', ascending=True)
+
+plt.style.use('ggplot')
+
+df_total.plot(kind='barh',figsize=(10,5),width=0.5,color='cornflowerblue')
+
+plt.title('서울->타시도 인구 이동', size=30)
+plt.ylabel('전입자', size=20)
+plt.xlabel('이동 인구수', size=20)
+
+plt.show()
+----
+
+image:./images/image09.png[]
+
+== 히스토그램(histogram)
+
+* 변수가 하나는 단변수 데이터의 빈도수를 그래프로 표현
+* 같은 크기의 여러 구간으로 나누고 각 구간에 속하는 데이터 값의 개수(빈도)를 y축에 표시
+* 구간을 나누는 간격의 크기에 따라 빈도가 달라지고 히스토그램의 모양이 변함
+* plot(kind='hist') 옵션으로 표시
++
+[source, python]
+----
+plt.style.use('classic')
+
+df = pd.read_csv('./auto-mpg.csv', header=None)
+
+df.columns = ['mpg','cylinders','displacement','horsepower','weight','acceleration','model year','origin','name']
+
+df['mpg'].plot(kind='hist', bins=10, color='coral', figsize=(10,5))
+
+plt.title('Histogram')
+plt.xlabel('mpg')
+plt.show()
+----
+
+image:./images/image10.png[]
+
+== 산점도(scatter plot)
+
+* 서로 다른 두 변수 사이의 관계를 나타냄
+* 각 변수는 연속되는 값을 가짐
+* 일반적으로 정수형 또는 실수형 값
+* plot('scatter') 옵션으로 표시
++
+[source, python]
+----
+df_car.plot(kind='scatter',x='weight',y='mpg',c='coral',s=10,figsize=(10,5))
+plt.title('Scatter plnt = 연비 vs. 무게')
+plt.show()
+----
+
+image:./images/image11.png[]
+
+=== 버블차트
+
+* 점의 크기에 변화를 주어 세 변수 사이의 관계를 나타냄
++
+[source, python]
+----
+cylinders_size = df_car.cylinders / df_car.cylinders.max() * 300
+
+df_car.plot(kind='scatter',x='weight',y='mpg',c='coral',figsize=(10,5),s=cylinders_size, alpha=0.3)
+plt.title('Scatter plot: 연비-무게-실린더수')
+plt.show()
+----
+
+image:./images/image12.png[]
+
+== 파이차트(pie chart)
+
+* 원을 파이 조각처럼 표현
+* 조각의 크기는 해당 변수에 속하는 데이터 값의 크기에 비례함
+* plot('pie') 옵션으로 표시
++
+[source, python]
+----
+df_car['count'] = 1
+df_origin = df_car.groupby('origin').sum()
+
+df_origin.index = ['USA','EU','JPN']
+
+df_origin['count'].plot(kind='pie',
+                        figsize=(7,5), 
+                        autopct='%1.1f%%',
+                        startangle=0,
+                        colors=['chocolate','bisque','cadetblue'])
+
+plt.title('Model Origin', size=20)
+plt.axis('equal')
+plt.legend(labels=df_origin.index, loc='upper right')
+plt.show()
+----
+
+image:./images/image13.png[]
+
+== 박스 플롯(Boxplot)
+
+* 범주형 데이터의 범위를 파악
+* 5개의 통계 지표(최소값, 1분위값, 중간값, 3분위값, 최대값)을 제공
+* 각 axe 객체에 boxplot() 함수를 호출
+
+[source, python]
+----
+fig = plt.figure(figsize=(15,5))
+ax1 = fig.add_subplot(1,2,1)
+ax2 = fig.add_subplot(1,2,2)
+
+ax1.boxplot(x=[df_car[df_car['origin']==1]['mpg'],
+               df_car[df_car['origin']==2]['mpg'],
+               df_car[df_car['origin']==3]['mpg']],
+               labels=['USA','EU','JAPAN'])
+ax2.boxplot(x=[df_car[df_car['origin']==1]['mpg'],
+               df_car[df_car['origin']==2]['mpg'],
+               df_car[df_car['origin']==3]['mpg']],
+               labels=['USA','EU','JAPAN'],
+               vert=False)
+ax1.set_title('제조국가별 연비 분포(수직)')
+ax2.set_title('제조국가별 연비 분포(수평)')
+
+plt.show()
+----
+
+image:./images/image14.png[]
