@@ -77,3 +77,23 @@ Share images, automate workflows, and more with a free Docker ID:
 For more examples and ideas, visit:  
  https://docs.docker.com/get-started/
 ----
+
+== Hordonworks Data Platform 설치
+
+1. https://nhnacademy.dooray.com/drive/3619694603650156997/views/3658365618471906193 에서 HDP_sandbox_30 폴더를 다운로드합니다.
+2. 압축 파일 형태로 다운로드되면, 파일을 압축 해제 합니다.
+3. 아래 명령을 실행하여 home 디렉토리에 HDP 디렉토리를 생성합니다.
++
+----
+$ mkdir ~/HDP
+----
+4. 압축 해제된 폴더에는 두 폴더와 두 개의 파일이 포함되어 있습니다. 파일을 HDP 폴더로 복사합니다.
++
+----
+$ cp * ~/HDP
+----
+5. ~/HDP 폴더로 이동하고, 아래 명령을 실행하여 설치를 시작합니다.
++
+----
+$ sudo bash ./docker-deploy-hdp30.sh
+----

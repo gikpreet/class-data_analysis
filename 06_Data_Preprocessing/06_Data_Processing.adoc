@@ -1,0 +1,175 @@
+= Module 06 Data Preprocessing
+
+* 데이터 분석의 정확도는 분석 데이터의 품질에 의해 좌우됨
+* 누락 데이터, 중복 데이터 등 오류를 처리하고 분석 목적에 맞도록 변형해야 함
+* 수집한 데이터를 분석에 적합하도록 하는 작업을 데이터 전처리(Data Pre-processing)이라고 함
+
+== 누락 데이터 처리
+
+* DataFrame에는 값이 누락되는 경우가 많음
+* 파일 형식을 변경하는 과정에서 파일이 누락되는 경우가 많음
+* 누락된 데이터는 NaN(Not a Number)로 표시함
+* 누락 데이터가 많아지면 데이터의 품질이 떨어지고, 알고리즘을 왜곡하는 현상이 일어남
+
+=== 누락 데이터 확인
+
+[source, python]
+----
+import seaborn as sns
+
+df_titanic = sns.load_dataset('titanic')
+df_titanic.head()
+----
+
+[%header]
+|===
+|Survived|pclass|sex|age|sibsp|parch|fare|embarked|class|who|adult_male|deck|embark_town|alive|alone
+|0	|3	|male	|22.0	|1	|0	|7.2500	|S	|Third	|man	|True	|NaN	|Southampton	|no	|False
+|1	|1	|female	|38.0	|1	|0	|71.2833	|C	|First	|woman	|False	|C	|Cherbourg	|yes	|False
+|1	|3	|female	|26.0	|0	|0	|7.9250	|S	|Third	|woman	|False	|NaN	|Southampton	|yes	|True
+|1	|1	|female	|35.0	|1	|0	|53.1000	|S	|First	|woman	|False	|C	|Southampton	|yes	|False
+|0	|3	|male	|35.0	|0	|0	|8.0500	|S	|Third	|man	|True	|NaN	|Southampton	|no	|True
+|===
+
+[source, python]
+----
+df_titanic.info()
+----
+
+* _age_, _embarked_, _deck_, _embark_town_ 에 누락 데이터가 있음
+
+----
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 15 columns):
+ #   Column       Non-Null Count  Dtype   
+---  ------       --------------  -----   
+ 0   survived     891 non-null    int64   
+ 1   pclass       891 non-null    int64   
+ 2   sex          891 non-null    object  
+ 3   age          714 non-null    float64 
+ 4   sibsp        891 non-null    int64   
+ 5   parch        891 non-null    int64   
+ 6   fare         891 non-null    float64 
+ 7   embarked     889 non-null    object  
+ 8   class        891 non-null    category
+ 9   who          891 non-null    object  
+ 10  adult_male   891 non-null    bool    
+ 11  deck         203 non-null    category
+ 12  embark_town  889 non-null    object  
+ 13  alive        891 non-null    object  
+ 14  alone        891 non-null    bool    
+dtypes: bool(2), category(2), float64(2), int64(4), object(5)
+memory usage: 80.7+ KB
+----
+
+* _value_counts(dropna=False)_ 함수로 누락 데이터 확인
+
+[source, python]
+----
+df_titanic.age.value_counts(dropna=False)
+----
+----
+NaN      177
+24.00     30
+22.00     27
+18.00     26
+28.00     25
+        ... 
+36.50      1
+55.50      1
+0.92       1
+23.50      1
+74.00      1
+Name: age, Length: 89, dtype: int64
+----
+
+* _isnull()_ 함수와 _notnull()_ 함수를 사용하여 누락 데이터 확인
+
+[source, python]
+----
+df_titanic.embarked[df_titanic.embarked.isnull() == True]
+df_titanic.embarked[df_titanic.embarked.notnull() == False]
+----
+----
+61     NaN
+829    NaN
+Name: embarked, dtype: object
+----
+----
+0      NaN
+2      NaN
+4      NaN
+5      NaN
+7      NaN
+      ... 
+884    NaN
+885    NaN
+886    NaN
+888    NaN
+890    NaN
+Name: deck, Length: 688, dtype: category
+Categories (7, object): ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+----
+
+* isnull() 함수로 누락 데이터 개수 확인
+
+[source, python]
+----
+df_titanic.deck.isnull().sum()
+df_titanic.isnull().sum(axis=0)
+----
+
+=== 누락 데이터 삭제
+
+* dropna() 함수에 thresh 값을 500으로 하여 누락 데이터가 500개 이상인 column을 삭제
+
+[source, python]
+----
+df_titanic.dropna(axis=1, thresh=500, inplace=True)
+----
+
+* 분석에 영향을 크게 미치는 데이터라면, 삭제할 수 있음
+
+[source, python]
+----
+df_age = df_titanic.dropna(subset=['age'], how='any', axis = 0)
+len(df_age)
+----
+----
+714
+----
+
+=== 누락 데이터 치환
+
+* 데이터의 품질을 높일 목적으로 누락 데이터를 삭제하기 힘든 경우가 더 많음
+* 데이터 분석의 정확도는 데이터의 품질외에도 제공되는 데이터의 양에 상당한 영향을 받음
+* 누락 데이터를 대체할 값으로는 평균값, 최빈값 등을 사용
+* _fillna()_ 함수 사용
+
+_평균값을 사용하여 데이터 치환_
+
+[source, python]
+----
+mean_age = df_titanic['age'].mean(axis=0)
+df_titanic.fillna(mean_age, inplace=True)
+----
+
+_빈도수 높은 데이터를 사용하여 데이터 치환_
+[source, python]
+----
+most_freq = df_titanic.embark_town.value_counts(dropna=True).idxmax()
+df_titanic.embark_town.fillna(most_freq, inplace=True)
+----
+
+_이웃하고 있는 값으로 데이터 치환_
+[source, python]
+----
+df_titanic.embark_town.fillna(method='ffill', inplace=True)
+----
+
+== 중복 데이터 처리
+
+* DataFrame에서 각 행은 분석 대상이 가지고 있는 모든 속성에 대한 관측값을 뜻함
+* 데이터셋에서 동일한 관측값이 2개 이상 중복되는 경우 중복 데이터를 찾아서 삭제해야 함
+* 중복된 데이터는 분석을 왜곡함
