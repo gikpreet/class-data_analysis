@@ -547,7 +547,7 @@ seoulmap.show_in_browser()
 
 image:./images/image21.png[]
 
-* 마커를 사용해서 위치 표시
+=== 마커를 사용해서 위치 표시
 
 [source, python]
 ----
@@ -573,3 +573,46 @@ folium.Marker(
 
 map.show_in_browser()
 ----
+
+image:./images/image22.png[]
+
+=== 지도 영역에 단계구분도 표시
+
+* 지도상의 경계에 둘러싸인 영역에 색을 칠하거나 음영으로 정보 표시
+
+[source, python]
+----
+import json
+
+df = pd.read_excel('경기도인구데이터.xlsx', index_col='구분')
+df.columns = df.columns.map(str)
+
+# 경기도 시군구 경계 정보를 가진 geo-json 파일 불러오기
+geo_path = './경기도행정구역경계.json'
+try:
+    geo_data = json.load(open(geo_path, encoding='utf-8'))
+except:
+    geo_data = json.load(open(geo_path, encoding='utf-8-sig'))
+
+# 경기도 지도 만들기
+g_map = folium.Map(location=[37.5502,126.982], 
+                   tiles='Stamen Terrain', zoom_start=9)
+
+# 출력할 연도 선택 (2007 ~ 2017년 중에서 선택)
+year = '2017'  
+
+# Choropleth 클래스로 단계구분도 표시하기
+folium.Choropleth(geo_data=geo_data,    # 지도 경계
+                 data = df[year],      # 표시하려는 데이터
+                 columns = [df.index, df[year]],  # 열 지정
+                 fill_color='YlOrRd', fill_opacity=0.7, line_opacity=0.3,
+                 threshold_scale=[10000, 100000, 300000, 500000, 700000],               
+                 key_on='feature.properties.name',
+                 ).add_to(g_map)
+
+g_map.show_in_browser()
+# 지도를 HTML 파일로 저장하기
+# g_map.save('./gyonggi_population_' + year + '.html')
+----
+
+image:./images/image23.png[]
