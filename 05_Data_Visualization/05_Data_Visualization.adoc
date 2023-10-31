@@ -350,10 +350,9 @@ $ pip install pyreatstat
 df_welpare_raw = pd.read_spss('file_name')
 ----
 
-* 분석 연습문제
+* 분석 연습문제 - 1
 ** 성별에 따른 월급차이 분석
-** 데이터 파악
-*** sex 변수의 타입을 검토하고 빈도를 점검
+*** sex column의 타입을 검토하고 빈도를 점검
 *** sex 데이터의 빈도를 표시하기 위한 최적의 그래프를 선택하여 표시
 *** 급여를 표시하는 income 변수의 타입을 검토
 *** 급여의 평균값, 중앙값을 계산
@@ -363,4 +362,63 @@ df_welpare_raw = pd.read_spss('file_name')
 *** 성별 월급차이 분석
 *** 성별 월급차이를 표시하기 위한 최적의 그래프를 선택하여 표시
 
+* 분석 연습문제 - 2
+** 연령에 따른 급여차이 분석
+*** birth column의 타입을 파악하고 빈도를 점검
+*** birth 데이터의 빈도를 표시하기 위한 최적의 그래프를 선택하여 표시
+*** birth 데이터의 결측치 처리
+*** 연령별 월급차이 분석
+*** 연령별 월급차이를 표시하기 위한 최적의 그래프를 선택하여 표시
+
+* 분석 연습문제 - 3
+* 직업별 월급 차이를 구하시오
+
 == Seabon 패키지
+
+* Matplotlib의 기능과 스타일을 확장한 Python 시각화 도구의 고급 버전
+* 비교적 단순한 인터페이스
+
+== Sample Data
+
+* seaborn에 기본 탑재된 titanic 데이터셋 사용
+
+[source, python]
+----
+df_titanic = sns.load_dataset('titanic')
+df_titanic.head()
+----
+
+== 산점도
+
+* 2개의 연속 변수 사이의 산점도 및 선형 회귀 분석에 의한 회귀선 표시
+* regplot() 함수
+
+[source, python]
+----
+fig = plt.figure(figsize=(15, 5))
+sns.regplot(x='age',y='fare',data=df_titanic)
+----
+
+image:./images/image15.png[]
+
+== 히스토그램
+
+* distplot() 함수
+
+[source, python]
+----
+fig = plt.figure(figsize=(15,5))
+ax1 = fig.add_subplot(1,3,1)
+ax2 = fig.add_subplot(1,3,2)
+ax3 = fig.add_subplot(1,3,3)
+
+sns.distplot(df_titanic['fare'], ax=ax1)
+sns.distplot(df_titanic['fare'], hist=False, ax=ax2)
+sns.distplot(df_titanic['fare'], kde=False, ax=ax3)
+
+ax1.set_title('요금 - hist./ked')
+ax2.set_title('요금 - ked')
+ax3.set_title('요금 - hist')
+----
+
+image:./images/image16.png[]
