@@ -343,3 +343,22 @@ df_stock['day'] = df_stock['new_date'].dt.day
 df_stock['date_year'] = df_stock['new_date'].dt.to_period(freq='Y')
 df_stock['date_month'] = df_stock['new_date'].dt.to_period(freq='M')
 ----
+
+== 연습 문제
+
+code 디렉토리의 WHO-COVID-19_global-data.csv 파일은 전 세계의 COVID-19 감염 통계 데이터를 가지고 있습니다.
+
+[%header, cols="2,1,6", width=100%]
+|===
+|필드 이름|Type|설명
+|Date_reported|Date|WHO에 보고돤 날짜
+|Country_code|String|ISO Alpha-2 국가코드
+|Country	   |String|국가, 지역, 영역
+|WHO_region|String|WHO 지역 사무소: WHO 회원국은 아프리카 지역 사무소(AFRO), 미주 지역 사무소(AMRO), 동남아시아 지역 사무소(SEARO), 유럽 지역 사무소(EURO),동부 지중해 지역 사무소(EMRO) 및 서태평양 지역 사무소(WPRO) 등 6개의 WHO 지역으로 분류됩니다
+|New_cases|Integer|새로 확인된 감염자 수. 현재 누적 사례에서 이전 누적 사례 수를 빼서 계산함
+|Cumulative_cases|Integer|WHO에 보고돤 누적 확진자 수
+|New_deaths|Integer|확인된 사망자 수
+|Cumulative_deaths|Integer|WHO에 보고된 누적 사망자 수
+|===
+
+데이터를 이용하여 COVID-19 감염자/사망자 데이터를 분석하고 보고서를 작성하세요.
