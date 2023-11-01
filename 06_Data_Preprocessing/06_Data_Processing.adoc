@@ -300,3 +300,20 @@ df_stock['new_date'] = pd.to_datetime(df_stock['Date'])
 df_stock.set_index('new_date', inplace=True)
 df_stock.drop('Date', axis=1, inplace=True)
 ----
+
+=== 시계열 데이터 생성
+
+* timestamp 배열 +
+Pandas date_range() 함수를 사용하여 여러개의 날짜(timestamp)로 구성된 시계열 데이터 생성
+
+[source, python]
+----
+ts_ms = pd.date_range(start='2019-01-01',   # 날짜 범위 시작
+                      end=None,             # 날짜 범위 끝
+                      periods=6,            # timestamp 개수
+                      freq='MS',            # 시간 간격(MS: Month Start)
+                      tz='Asia/Seoul'),     # 시간대
+----
+
+* freq: https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases 
+* tz: pytz.all_timezones
