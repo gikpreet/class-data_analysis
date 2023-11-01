@@ -78,6 +78,27 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ----
 
+== sudo 권한 없이 docker를 사용하도록 설정
+
+1. 아래 명령을 실행하여 group을 확인합니다.
++
+----
+$ cat /etc/group | grep docker
+docker:x:998
+----
+
+2. 아래 명령을 실행하여 사용자가 docker 그룹에 포함되도록 설정합니다.
++
+----
+$ sudo usermod -aG docker {user_id}
+----
+
+3. 아래 명령을 실행하여 시스템을 재시작합니다.
++
+----
+$ reboot
+----
+
 == Hordonworks Data Platform 설치
 
 1. https://nhnacademy.dooray.com/drive/3619694603650156997/views/3658365618471906193 에서 HDP_sandbox_30 폴더를 다운로드합니다.

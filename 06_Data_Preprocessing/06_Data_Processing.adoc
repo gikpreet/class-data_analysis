@@ -189,4 +189,114 @@ df = pd.DataFrame({
 })
 
 df_dup = df.duplicated()
+col_dup = df.c2.duplicated()
+col_dup = df[['c2','c3']].duplicated()
+----
+
+=== 중복 데이터 제거
+
+* drop_duplicated() 메소드 사용
+* 원본 객체에서 중복값을 제거하려면 inplace=True 옵션 사용
+* subset 옵션으로 column 이름을 기준으로 삭제 가능
+
+[source, python]
+----
+df.drop_duplicates(inplace=True)
+df.drop_duplicates(subset=['c2','c3'], inplace=True)
+----
+
+== 데이터 표준화
+
+* 실제 데이터는 단위 선택, 대소문자 구분, 약어 사용 등 여러 원인에 의해 다양한 형태로 표현됨
+* 데이터의 형식이 다르면 분석의 정확도가 떨어짐
+* 데이터 포맷을 일관성 있게 표준화하는 작업이 필요함
+
+=== Sample Data
+
+[%header, cols="1,1,1,1,1,1,1,2,1,3", width=100%]
+|===
+|	|mpg	|cylinders	|displayment	|horsepower	|weight	|acceleration	|model year	|origin	|name
+|0	|18.0	|8	|307.0	|130.0	|3504.0	|12.0	|70	|1	|chevrolet chevelle malibu
+|1	|15.0	|8	|350.0	|165.0	|3693.0	|11.5	|70	|1	|buick skylark 320
+|2	|18.0	|8	|318.0	|150.0	|3436.0	|11.0	|70	|1	|plymouth satellite
+|3	|16.0	|8	|304.0	|150.0	|3433.0	|12.0	|70	|1	|amc rebel sst
+|...	|...	|...	|...	|...	|...	|...	|...	|...	|...
+|395	|32.0	|4	|135.0	|84.00	|2295.0	|11.6	|82	|1	|dodge rampage
+|396	|28.0	|4	|120.0	|79.00	|2625.0	|18.6	|82	|1	|ford ranger
+|397	|31.0	|4	|119.0	|82.00	|2720.0	|19.4	|82	|1	|chevy s-10
+|===
+
+* 샘플 데이터에서, mpg는 갤런당 마일(mile per gallon)으로 표시됨
+
+=== 단위 환산
+
+* mpg를 kpl(kilo per liter)로 변환
+
+[source, python]
+----
+mpg_to_kpl = 1.60934 / 3.78541
+df_car['kpl'] = round(df_car['mpg'] * mpg_to_kpl, 2)
+----
+
+=== 자료형 변환
+
+* horsepower 데이터는 누락 데이터를 '?' 로 표시함
+* 결손치를 Numpy.non으로 변경후 누락 데이터를 삭제하고 타입을 변환
+
+[source, python]
+----
+df_car['horsepower'].replace('?',np.nan, inplace=True)
+df_car.dropna(subset=['horsepower'], axis=0, inplace=True)
+df_car['horsepower'] = df_car['horsepower'].astype(float)
+----
+
+=== 카테고리형 데이터 처리
+
+* 데이터 분석 알고리즘에 따라, 연속 데이터를 그대로 사용하는 것 보다는 일정한 구간으로 나누어 분석하는 것이 효율적인 경우가 많음
+* 연속된 값을 일정한 구간으로 나누고 각 구간을 이산 변수로 변환하는 과정을 분할(binning)이라고 함
+* cut() 함수를 사용하여 연속 데이터를 분할 데이터로 변환할 수 있음
+
+[source, python]
+----
+count, bin_dividers = np.histogram(df_car['horsepower'], bins=3)
+df_car['hp_bin'] = pd.cut(x=df_car['horsepower'],
+                          bins=bin_dividers,
+                          labels=['저출력','보통출력','고출력'],
+                          include_lowest=True)
+----
+
+=== 정규화
+
+* Dataframe의 column 데이터의 상대적 크기차이 때문에 분석 결과가 달라질 수 있음
+* 숫자의 상대적인 크기 차이를 제거하면 더 정확한 분석 결과를 기대할 수 있음
+* 각 column의 데이터를 동일한 크기 기준으로 나타내는 것을 정규화(normalization)이라고 함
+** 데이터베이스의 정규화와는 다른 개념
+
+=== 시계열 데이터
+
+* Pandas는 주식, 환율 등 금융 데이터를 다루기 위한 기능을 제공함
+* 시계열 데이터(time series)를 다룰 수 있는 유용한 기능들을 제공
+* 시계열 데이터를 DataFrame의 row index로 사용하면 시간으로 기록된 데이터를 분석하기 용이함
+
+==== Sample Data
+[%header, cols=7, width=80%]
+|===
+|	|Date	|Close	|Start	|High	|Low	|Volume
+|0	|2018-07-02	|10100	|10850	|10900	|10000	|137977
+|1	|2018-06-29	|10700	|10550	|10900	|9990	|170253
+|2	|2018-06-28	|10400	|10900	|10950	|10150	|155769
+|3	|2018-06-27	|10900	|10800	|11050	|10500	|133548
+|4	|2018-06-26	|10800	|10900	|11000	|10700	|63039
+|===
+
+==== Date를 시계열로 변환
+
+* Date를 datetime으로 변환
+* datetime 컬럼을 index로 지정하고 Date column 삭제
+
+[source, python]
+----
+df_stock['new_date'] = pd.to_datetime(df_stock['Date'])
+df_stock.set_index('new_date', inplace=True)
+df_stock.drop('Date', axis=1, inplace=True)
 ----
