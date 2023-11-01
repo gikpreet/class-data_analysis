@@ -313,7 +313,33 @@ ts_ms = pd.date_range(start='2019-01-01',   # 날짜 범위 시작
                       periods=6,            # timestamp 개수
                       freq='MS',            # 시간 간격(MS: Month Start)
                       tz='Asia/Seoul'),     # 시간대
+
+pr_h = pd.period_range(start='2019-01-01',
+                       end=None,
+                       periods=3,
+                       freq='H')
+
+pr_2h = pd.period_range(start='2019-01-01',
+                       end=None,
+                       periods=3,
+                       freq='2H')
 ----
 
 * freq: https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases 
 * tz: pytz.all_timezones
+
+=== 시계열 데이터 활용
+
+* 연-월-일 날짜 데이터에서 일부를 분리하여 추출할 수 있음
+
+[source, python]
+----
+df_stock['new_date'] = pd.to_datetime(df_stock['Date'])
+
+df_stock['year'] = df_stock['new_date'].dt.year
+df_stock['month'] = df_stock['new_date'].dt.month
+df_stock['day'] = df_stock['new_date'].dt.day
+
+df_stock['date_year'] = df_stock['new_date'].dt.to_period(freq='Y')
+df_stock['date_month'] = df_stock['new_date'].dt.to_period(freq='M')
+----
