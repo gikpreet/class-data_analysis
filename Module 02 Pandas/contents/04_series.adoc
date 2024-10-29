@@ -1,0 +1,125 @@
+= Series
+
+* 데이터가 순차적으로 나열된 1차원 배열의 형태로 데이터를 저장
+* Python의 dictionary와 유사한 형태의 자료구조
+** index와 Value로 구성됨
+** 열벡터 형태의 자료구조
+
+image:../images/image01.png[Series structure]
+
+---
+
+== list에서 생성
+
+* list에서 Series생성
++
+_pandas.Series(list)_
++
+[source, python]
+----
+list = ['2023-12-30', 3.14, 'Celine', True]
+series = pd.Series(list)
+----
++
+image:../images/image04.png[]
+
+== tuple에서 생성
+
+* tuple에서 Series 생성
++
+_pandas.Series(tuple)_
++
+[source, python]
+----
+tup = ('Celine', '1976-10-28', 'femail', True)
+# 인덱스 옵션 지정
+series = pd.Series(tup, index=['name','birthday','gender', "isStudent"])
+----
++
+image:../images/image07.png[]
+
+== Dictionary에서 생성
+
+* Dictionary에서 Series 생성
++
+_pandas.Series(dictionary)_
++
+[source, python]
+----
+dict = {'name': 'Celine', 'birthday': '1976-10-28', 'gender': 'female', 'isStudent': True}
+series = pd.Series(dict)
+series
+----
++
+image:../images/image03.png[]
+
+== Series 데이터 액세스
+
+* 인덱스, 인덱스명 사용
+** list를 사용하여 여러 데이터에 액세스
++
+image:../images/image05.png[]
++
+[source, python]
+----
+series[0]
+'Celine'
+
+series[[0, 1]]
+----
++
+----
+name        Celine
+birthday    1976-10-28
+----
++
+[source, python]
+----
+series[0:4]
+----
++
+----
+name             Celine
+birthday     1976-10-28
+gender           femail
+isStudent          True
+----
++
+[source, python]
+----
+series['gender']
+----
++
+----
+'female'
+----
++
+[source, python]
+----
+series[['name', 'gender']]
+----
++
+----
+name      Celine
+gender    female
+----
++
+** 인덱스에 액세스
++
+_Series_object.index_
++
+[source, python]
+----
+series.index
+Index(['name', 'birthday', 'gender', 'isStudent'], dtype='object')
+----
++
+** 데이터에 액세스
++
+_Series_object.values
++
+[source, python]
+----
+series.values
+array(['Celine', '1978-10-26', 'female', True], dtype=object)
+----
