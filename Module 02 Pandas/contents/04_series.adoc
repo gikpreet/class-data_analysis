@@ -69,7 +69,8 @@ series.index
 series.values
 ----
 
-* 인덱스, 인덱스명 사용
+인덱스, 인덱스명 사용하여 데이터에 액세스 할 수 있습니다.
+
 ** list를 사용하여 여러 데이터에 액세스
 +
 image:../images/image05.png[]
