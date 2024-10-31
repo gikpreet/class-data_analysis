@@ -1,6 +1,65 @@
-= Pandas 데이터 조회
+= DataFrame 데이터 조회
 
 * Pandas 라이브러리는 데이터를 조회하기 위한 많은 방법을 제공
 
 ---
 
+Pandas 라이브러리는 DataFrame에서 데이터를 조회하기 위한 많은 방법을 제공합니다. 
+
+== 행(row) 데이터 액세스
+
+데이터프레임의 행 데이터에 액세스 하려면 loc와 iloc 인덱스를 사용합니다. 
+
+* `loc` 인덱서는 DataFrame에 만든 인덱스를 사용해 행 데이터에 액세스합니다.
+** 슬라이싱을 할 수 있으며, 마지막 데이터를 포함합니다. ['a':'c']는 'a', 'b','c'를 산출합니다.
+** 여러 데이터를 선택하기 위해 인덱서에 list를 사용할 수 있습니다.
+* `iloc` 인덱서는 DataFrame에 생성된 정수형 인덱스를 사용해 
+** 슬라이싱을 할 수 있으며, 마지막 번호는 제외됩니다.
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|d |Hans|Germany|40         |50     |90
+|===
+
+[source, python]
+----
+df.loc['a']
+----
+
+----
+이름    Celine
+나라    France
+영어        90
+수학       100
+과학       100
+Name: a, dtype: object
+----
+
+[source, python]
+----
+df.loc['a':'c']
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|===
+
+[source, python]
+----
+df.loc[['a','c']]
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|c |Jason|USA    |20         |40     |60
+|===

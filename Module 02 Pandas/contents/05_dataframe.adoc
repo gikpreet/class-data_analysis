@@ -10,25 +10,27 @@ image:../images/image02.png[data, 600]
 
 ---
 
+DataFrame은 2차원 배열입니다. Microsoft Excel이나 관계 데이터베이스의 Relation이 모두 2차원 배열 형태로 데이터를 저장하며, 데이터를 사용하는 많은 분야에서 사용되는 데이터 저장 형태입니다. Pandas의 DataFrame은 많이 사용되는 통계 소프트웨어인 R에서 본따 만들어졌다고 알려져 있습니다.
+
+위 그림에서 보듯이, DataFrame은 여러 개의 Series들이 조직된 구조를 가집니다. 데이터프레임의 Column은 각각 Series 객체입니다. DataFrame은 여러개의 열벡터들이 같은 행 인덱스를 기준으로 줄지어 결합된 2차원 벡터 또는 행렬(Matrix)입니다.
+
+DataFrame은 행(Row)과 열(Column)을 나타내기 위해 행이름(Series의 인덱스)와 열 이름(컬럼의 이름) 두 가지 종류의 주소를 사용합니다. 
+
 == DataFrame 생성
 
-* DataFrame을 만들기 위해서는 같은 길이(원소의 개수가 동일한)dml 1차원 배열 여러 개가 필요함
-* DataFrame은 여러 개의 Series(열, column)을 모아놓은 집합과 같음
-** Dictionary의 value에 해당하는 각 리스트가 Series 배열로 변환되어 DataFrame의 column이 됨
-** Dictionary의 key는 각 시리즈의 이름으로 변환되어 DataFrame의 column 이름이 됨
+DataFrame을 생성하기 위해서는 Pandas의 DataFrame() 함수를 사용합니다. list, tuple, dictionary등으로부터 DataFrame을 생성할 수 있습니다.
 
-== DataFrame 생성 (List)
+== list, tuple에서 DataFrame 생성
 
-* list 사용
-** column 이름이 정수형으로 지정됨
-+
-_Pandas.DataFrame( list )_
-+
+DataFrame을 만들기 위해서는 같은 길이(원소의 개수가 동일한)의 1차원 배열 여러 개가 필요하며, list 또는 tuple등을 사용할 수 있습니다. DataFrame은 여러 개의 Series(열, column)을 모아놓은 집합과 같습니다.
+
+아래와 같이 생성하면 열 이름과 행 인덱스가 모두 정수형으로 지정된 DataFrame이 생성됩니다.
+
 [source, python]
 ----
 import pandas as pd
 
-df = pd.DataFrame([ 
+df_from_list = pd.DataFrame([ 
     ['Celine', 'France', 90, 100, 100],
     ['James','UK', 80, 40, 30],
     ['Jason','USA',80, 40, 60],
@@ -45,10 +47,8 @@ df = pd.DataFrame([
 |3 |Hans    |Germany    |40 |50  |90
 |===
 
-== DataFrame 생성 (List + columns)
+컬럼 이름을 지정하여 생성할 수 있습니다.
 
-* column 이름 지정
-+
 [source, python]
 ----
 df = pd.DataFrame([ 
@@ -59,7 +59,7 @@ df = pd.DataFrame([
     columns = ['name', 'nation', 'english', 'math', 'science']
 )
 ----
-+
+
 [%header, cols=6, width=50%]
 |===
 |  |name    |nation     |english  |math  |science
@@ -69,36 +69,33 @@ df = pd.DataFrame([
 |3 |Hans    |Germany    |40 |50  |90
 |===
 
-== DataFrame 생성 (List + columns + index)
+컬럼 이름과 행 인덱스를 지정하여 생성할 수 있습니다.
 
-* name을 index로 지정
-+
 [source, python]
 ----
 df = pd.DataFrame([ 
-    ['France', 90, 100, 100],
-    ['UK', 80, 40, 30],
-    ['USA',80, 40, 60],
-    ['Germany', 60, 50, 90]],
-    columns = ['nation', 'english', 'math', 'science'],
-    index = ['celine', 'James','Jason','Hans']
+    ['Celine', 'France', 90, 100, 100],
+    ['James','UK', 80, 40, 30],
+    ['Jason','USA',80, 40, 60],
+    ['Hans','Germany', 60, 50, 90]],
+    columns = ['name', 'nation', 'english', 'math', 'science'],
+    index = ['celine','james','jason','hans']
 )
 ----
-+
-[%header, cols=4, width=50%]
+
+[%header, cols=5, width=50%]
 |===
-|nation  |english  |math  |science
-|Celine  |France     |90 |100 |100
-|James   |UK         |80 |40  |30
-|Jason   |USA        |20 |40  |60
-|Hans    |Germany    |40 |50  |90
+|        |name|nation  |english  |math  |science
+|Celine  |Celine  |France     |90 |100 |100
+|James   |James   |UK         |80 |40  |30
+|Jason   |Jason   |USA        |20 |40  |60
+|Hans    |Hans    |Germany    |40 |50  |90
 |===
 
-== DataFrame 생성 (Dictionary)
+== dictionary에서 DataFrame 생성
 
-* Dictionary 사용
-** column 이름 지정
-+
+Dictionary의 value에 해당하는 각 리스트가 Series 배열로 변환되어 DataFrame의 column이 되며, Dictionary의 key는 각 시리즈의 이름으로 변환되어 DataFrame의 column 이름이 됩니다.
+
 [source, python]
 ----
 import pandas as pd
@@ -111,7 +108,7 @@ df2 = pd.DataFrame({
     'science':  [100,30,60,90]
 })
 ----
-+
+
 [%header, cols=6, width=50%]
 |===
 |  |name   |nation  |english    |math   |science
@@ -121,29 +118,90 @@ df2 = pd.DataFrame({
 |3 |Hans   |Germany |40         |50     |90
 |===
 
-== DataFrame 생성 (Dictionary + index)
-
-* dictionary 사용
-** 이름을 key로 사용
+dictionary로 DataFrame을 만들면 dictionay의 key가 컬럼의 이름이 되고, value가 데이터가 됩니다. 이때 행 인덱스는 정수형으로 지정됩니다.
 
 [source, python]
 ----
-import pandas as pd
-
-df = pd.DataFrame({
+df_from_dictionary = pd.DataFrame({
+    'name':     ['Celine','James','Jason','Hans'],
     'nation':   ['France','UK','USA','Germany'],
     'english':  [90,80,80,60],
     'math':     [100,40,40,50],
     'science':  [100,30,60,90]
 })
-df.index = ['Celine','James','Jason','Hans']
 ----
 
-[%header, cols=5, width=40%]
+[%header, cols=6, width=40%]
 |===
-|       |nation |english    |math   |science
-|Celine |France |90         |100    |100
-|James  |UK     |80         |40     |30
-|Jason  |USA    |20         |40     |60
-|Hans   |Germany|40         |50     |90
+|  |name|nation |english    |math   |science
+|0 |Celine|France |90         |100    |100
+|1 |James|UK     |80         |40     |30
+|2 |Jason|USA    |20         |40     |60
+|3 |Hans|Germany|40         |50     |90
+|===
+
+모든 DataFrame에서, DataFrame의 특정 컬럼을 인덱스로 지정할 수도 있습니다.
+
+[source, python]
+----
+df.index = df['name']
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |name|nation |english    |math   |science
+|Celine |Celine|France |90         |100    |100
+|James |James|UK     |80         |40     |30
+|Jason |Jason|USA    |20         |40     |60
+|Hans |Hans|Germany|40         |50     |90
+|===
+
+== 행 인덱스와 컬럼 이름 변경
+
+DataFrame객체의 index, columns 속성에 새 1차원 배열(list, tuple 등)을 할당하여 행 인덱스와 컬럼 이름을 변경할 수 있습니다.
+
+[source, python]
+----
+new_index = ['a','b','c','d']
+df.index = new_index
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |name|nation |english    |math   |science
+|a |Celine|France |90         |100    |100
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|d |Hans|Germany|40         |50     |90
+|===
+
+[source, python]
+----
+new_columns = ['이름','국적','영어','수학','과학']
+df.columns = new_columns
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|국적|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|d |Hans|Germany|40         |50     |90
+|===
+
+DataFrame 객체의 rename() 메소드를 사용하면 행 인덱스와 컬럼 인덱스의 전체 또는 일부 이름을 변경할 수 있습니다. rename() 메소드는 새 DataFrame 객체를 생성합니다. 원본 객체의 인덱스를 변경하고 싶으면 파라미터로 inplace=True를 전달합니다.
+
+[source, python]
+----
+df_from_dictionary.rename(columns={'국적':'나라'}, inplace=True)
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|d |Hans|Germany|40         |50     |90
 |===
