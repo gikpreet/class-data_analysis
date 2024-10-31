@@ -15,6 +15,11 @@ Pandas 라이브러리는 DataFrame에서 데이터를 조회하기 위한 많�
 ** 여러 데이터를 선택하기 위해 인덱서에 list를 사용할 수 있습니다.
 * `iloc` 인덱서는 DataFrame에 생성된 정수형 인덱스를 사용해 
 ** 슬라이싱을 할 수 있으며, 마지막 번호는 제외됩니다.
+** 여러 데이터를 선택하기 위해 인덱서에 list를 사용할 수 있습니다.
+
+=== loc 인덱서 사용 (인덱스)
+
+아래와 같은 DataFrame에서,
 
 [%header, cols=6, width=40%]
 |===
@@ -24,6 +29,8 @@ Pandas 라이브러리는 DataFrame에서 데이터를 조회하기 위한 많�
 |c |Jason|USA    |20         |40     |60
 |d |Hans|Germany|40         |50     |90
 |===
+
+loc 메소드를 사용하여 DataFrame의 인덱스로 행(row)에 액세스 합니다.
 
 [source, python]
 ----
@@ -39,6 +46,8 @@ df.loc['a']
 Name: a, dtype: object
 ----
 
+인덱스 슬라이싱을 할 수 있습니다.
+
 [source, python]
 ----
 df.loc['a':'c']
@@ -52,6 +61,8 @@ df.loc['a':'c']
 |c |Jason|USA    |20         |40     |60
 |===
 
+여러개의 데이터에 액세스 할 경우 list를 사용할 수 있습니다.
+
 [source, python]
 ----
 df.loc[['a','c']]
@@ -62,4 +73,227 @@ df.loc[['a','c']]
 |  |이름|나라|영어|수학|과학
 |a |Celine|France |90         |100    |100
 |c |Jason|USA    |20         |40     |60
+|===
+
+=== iloc 인덱서 사용(정수형 인덱스)
+
+iloc 인덱서를 사용하면 정수형 인덱스로 행(row) 데이터에 액세스 할 수 있습니다.
+
+[source, python]
+----
+df.iloc[0]
+----
+
+----
+이름    Celine
+나라    France
+영어        90
+수학       100
+과학       100
+Name: a, dtype: object
+----
+
+인덱스 슬라이싱을 할 수 있습니다.
+
+[source, python]
+----
+df.iloc[0:3]
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|===
+
+여러개의 데이터에 액세스 할 경우 list를 사용할 수 있습니다.
+
+[source, python]
+----
+df.loc[['a','c']]
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|c |Jason|USA    |20         |40     |60
+|===
+
+== 열(column) 데이터 액세스
+
+DataFrame의 열 개체를 선택할때는 대괄호([ ])안에 열 이름을 입력하거나 도트 연산자(`.`)에 열 이름을 입력합니다. 두 번째 방법은 컬럼 이름이 정수형 인덱스일 떄는 사용할 수 없습니다.
+
+=== DataFrame 인덱서 사용
+
+DataFrame 인덱서를 사용하여 행 데이터(column)에 액세스 할 수 있습니다. return 타입은 Series입니다.
+
+[source, python]
+----
+df['이름']
+----
+
+----
+a    Celine
+b     James
+c     Jason
+d      Hans
+Name: 이름, dtype: object
+----
+
+list를 사용할 수 있습니다. 이 경우 DataFrame 타입 객체를 반환합니다. DataFrame 인덱서에 list를 사용하면 하나의 컬럼을 선택하더라도 DataFrame 타입 객체를 반환합니다.
+
+[source, python]
+----
+df[['이름','영어']]
+----
+
+[%header, cols=3, width=40%]
+|===
+|  |이름|영어
+|a |Celine|90
+|b |James|80 
+|c |Jason|20
+|d |Hans|40
+|===
+
+=== dot operation 사용
+
+DataFrame 객체에서 dot operation(`.`)을 사용하고 컬럼 이름을 사용해서 컬럼 데이터에 액세스 할 수 있습니다. Series 타입 객체를 return 합니다.
+
+[source, python]
+----
+df.이름
+----
+
+----
+a    Celine
+b     James
+c     Jason
+d      Hans
+Name: 이름, dtype: object
+----
+
+== 셀(cell) 데이터 액세스
+
+DataFrame의 셀에 들어있는 각 원소에 액세스하기 위해서, DataFrame 인덱서와 dot operation으로 연결한 컬럼 이름의 인덱서 두 가지를 모두 사용할 수 있습니다.
+
+컬럼 이름과 행 인덱스를 사용하여 [column, row]를 사용하는 방법과 행 인덱서과 컬럼 이름을 사용하는 방법 두 가지를 모두 사용할 수 있습니다.
+
+=== 컬럼 이름과 행 인덱스 사용
+
+컬럼 이름과 행 인덱스를 사용하여 액세스합니다. 행 인덱스에는 정수형 인덱스를 사용할 수도 있습니다.
+
+[source, python]
+----
+df['이름']['b']
+----
+
+----
+'James'
+----
+
+[source, python]
+----
+df['이름'][0]
+----
+
+----
+'Celine'
+----
+
+행 인덱스에 list를 사용하여 여러 값을 가져올 수 있습니다. 이 경우 Series 타입을 return 합니다.
+
+[source, python]
+----
+df['이름'][['a','b']]
+----
+
+----
+a    Celine
+b     James
+Name: 이름, dtype: object
+----
+
+=== 행 인덱스와 컬럼 이름 사용
+
+loc 인덱서와 iloc 인덱서로 행 인덱스를 사용하고, 컬럼 이름을 사용할 수 있습니다.
+
+[source, python]
+----
+df.loc['a']['이름']
+----
+
+[source, python]
+----
+df.iloc[0]['이름']
+----
+
+----
+'Celine'
+----
+
+행 인덱서와 컬럼이름을 리스트로 사용할 수 있습니다. 이때 리스트의 원소는 두 개가 되어야 하며, 첫 번째 요소는 행 인덱스, 두 번째 요소는 컬럼 이름이어야 합니다.
+
+[source, python]
+----
+df.loc['a','이름']
+----
+
+컬럼 이름을 list로 사용하여 여러 컬럼의 값에 액세스 할 수 있습니다. 이 경우 Series를 return 합니다.
+
+[source, python]
+----
+df.loc['b', ['이름','나라']]
+----
+
+----
+이름    James
+나라       UK
+Name: b, dtype: object
+----
+
+컬럼 이름에 슬라이싱을 사용할 수 있습니다. 이 경우 Series를 return 합니다.
+
+[source, python]
+----
+df.loc['b', '이름':'수학']
+----
+
+----
+이름    James
+나라       UK
+영어       80
+수학       40
+Name: b, dtype: object
+----
+
+행 이름과 컬럼 이름 모두에 슬라이싱을 사용할 수 있습니다. 이 경우 DataFrame을 return 합니다.
+
+[source, python]
+----
+df.loc['a':'b', '이름':'수학']
+----
+
+[%header, cols=5, width=40%]
+|===
+|  |이름|나라|영어|수학
+|a |Celine|France|90|100
+|b |James|UK|80|40
+|===
+
+행 이름과 컬럼 이름 모두에 list를 사용할 수 있습니다. 이 경우 DataFrame을 return 합니다.
+
+[source, python]
+----
+df.loc[['a','c'], ['이름','나라']]
+----
+
+[%header, cols=3, width=40%]
+|===
+|  |이름|나라
+|a |Celine|France
+|c |James|UK
 |===

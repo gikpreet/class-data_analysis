@@ -1,0 +1,55 @@
+= 컬럼/행(row) 추가, 데이터 변경, 삭제
+
+* DataFrame은 관계형 데이터베이스의 테이블과 유사
+* 열을 추가하고 삭제하며, 데이터를 변경할 수 있음
+
+---
+
+DataFrame에 행, 열을 추가하고 데이터를 변경하며, 열 및 행을 삭제할 수 있습니다. 아래 DataFrame을 예로 수행합니다.
+
+[%header, cols=6, width=40%]
+|===
+| |name|nation|english|math|science
+|a|Celine|France|90|100|100
+|b|James|UK|80|40|30
+|c|Jason|USA|20|40|60
+|d|Hans|Germany|40|50|90
+|===
+
+== 컬럼 추가
+
+DataFrame의 인덱서에 새 컬럼 이름을 지정하고 값을 할당하면 새 컬럼이 생성됩니다. 생성된 새 컬럼은 Series 객채이며, 스칼라 값을 할당하면 모든 원소의 값이 같은 값으로 할당됩니다.
+
+[source, python]
+----
+df['korean'] = 80
+----
+
+[%header, cols=7, width=40%]
+|===
+| |name|nation|english|math|science|korean
+|a|Celine|France|90|100|100|80
+|b|James|UK|80|40|30|80
+|c|Jason|USA|20|40|60|80
+|d|Hans|Germany|40|50|90|80
+|===
+
+원소의 값에 list 또는 tuple을 할당할 수 있습니다. 이 경우, 요소의 수가 열(row)수와 일치해야 합니다.
+
+[source, python]
+----
+df['physics'] = [100,80,60,70]
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|a|Celine|France|90|100|100|80|100
+|b|James|UK|80|40|30|80|80
+|c|Jason|USA|20|40|60|80|60
+|d|Hans|Germany|40|50|90|80|70
+|===
+
+== 행(row 추가)
+
+추가하려는 row 이름과 
