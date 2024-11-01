@@ -52,4 +52,151 @@ df['physics'] = [100,80,60,70]
 
 == 행(row 추가)
 
-추가하려는 row 이름과 
+추가하려는 row 이름과 데이터 값을 loc 인덱서를 사용하여 삽입합니다. 하나의 데이터를 입력하거나, 열의 개수에 맞는 list나 tuple등의 배열 형태로 여러개의 데이터를 입력할 수 있습니다. 하나의 값을 사용하면 row의 모든 컬럼에 같은 값을 입력합니다. 존재하는 row을 복사하여 삽입할 수도 있습니다. 존재하는 row 인덱스를 사용하면 값을 수정합니다.
+
+[source, python]
+----
+df.loc['e'] = 5
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|a|Celine|France|90|100|100|80|100
+|b|James|UK|80|40|30|80|80
+|c|Jason|USA|20|40|60|80|60
+|d|Hans|Germany|40|50|90|80|70
+|e|5|5|5|5|5|5|5
+|===
+
+row 인덱스와 같은 값을 사용하면 데이터를 변경합니다.
+
+[source, python]
+----
+df.loc['e'] = ['Vesper','USA',100,80,100,90,90]
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|a|Celine|France|90|100|100|80|100
+|b|James|UK|80|40|30|80|80
+|c|Jason|USA|20|40|60|80|60
+|d|Hans|Germany|40|50|90|80|70
+|e|Vesper|USA|100|80|100|90|90
+|===
+
+== Cell값 수정
+
+DataFrame의 특정 Cell을 선택하고 새로운 데이터를 지정하면 값이 변경됩니다. Cell 하나를 선택하여 변경할 수도 있고, 여러개의 원소를 선택하여 한꺼번에 값을 바꿀수도 있습니다.
+
+[source, python]
+----
+print(df.loc['b','nation'])
+df.loc['b', 'nation'] = 'USA'
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|a|Celine|France|90|100|100|80|100
+|b|James|USA|80|40|30|80|80
+|c|Jason|USA|20|40|60|80|60
+|d|Hans|Germany|40|50|90|80|70
+|e|Vesper|USA|100|80|100|90|90
+|===
+
+Cell에 접근할 수 있는 모든 방법으로 데이터를 변경할 수 있습니다.
+
+[source, python]
+----
+df['nation']['b'] = 'Germany'
+df.loc[['a','b'], 'physics'] = [90,90]
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|a|Celine|France|90|100|100|80|90
+|b|James|Germany|80|40|30|80|90
+|c|Jason|USA|20|40|60|80|60
+|d|Hans|Germany|40|50|90|80|70
+|e|Vesper|USA|100|80|100|90|90
+|===
+
+== row/column 위치 변경(Piviting)
+
+DataFrame의 row/column의 위치를 변경할 수 있습니다. 선형대수학의 전치행렬을 만드는 작업과 비슷한 개념입니다. 전치의 결과로 새 DataFrame 객체를 return 합니다.
+
+[source, python]
+----
+df2 = df.transpose()
+----
+
+[%header, cols=6, width=40%]
+|===
+||a|b|c|d|e
+|name|celine|James|Jason|Hans|Vesper
+|nation|France|Germany|USA|Germany|USA
+|english|90|80|80|60|100
+|math|100|40|40|50|80
+|science|100|30|60|90|100
+|korean|80|80|80|80|90
+|physics|90|90|60|70|90
+|===
+
+== row/column 삭제
+
+DataFrame에서 행(row)/열(column)을 삭제할 때는 drop() 메소드를 사용합니다. drop() 메소드는 원하는 row/column이 삭제된 새로운 DataFrame을 return 하므로, 현재 DataFrame에서 row/column을 삭제하려면 keyword parameter inplace를 True로 설정해야 합니다.
+
+drop() 메소드를 이용해서 row 또는 column을 삭제 할 때는 크게 세 가지 파라미터를 사용합니다.
+
+* 삭제할 row 또는 column의 목록. drop() 메소드의 첫 번쨰 파라미터
+* `axis` : 0이면 행(row), 1이면 열(column)
+* 'inplace' : True이면 현재 DataFrame에 적용, False이면 새 DataFrame을 return. 기본값은 False
+
+=== row(행) 삭제
+
+drop() 메소드의 axis 파라미터로 0을 주면 row를 삭제합니다.
+
+[source, python]
+----
+df2 = df.drop('d', axis=0)
+----
+
+[%header, cols=8, width=40%]
+|===
+||	name|	nation|	english|	math|	science|	korean|	physics
+|a|	Celine|	France|	90|	100|	100|	80|	90
+|b|	James|	Germany|	80|	40|	30|	80|	90
+|c|	Jason|	USA|	80|	40|	60|	80|	60
+|e|	Vesper|	USA|	100|	80|	100|	90|	90
+|===
+
+첫 번째 파라미터로 list를 전달하면 여러 목록을 삭제합니다.
+
+[source, python]
+----
+df2.drop(['c','e'], axis=0, inplace=True)
+----
+
+[%header, cols=8, width=40%]
+|===
+||	name|	nation|	english|	math|	science|	korean|	physics
+|a|	Celine|	France|	90|	100|	100|	80|	90
+|b|	James|	Germany|	80|	40|	30|	80|	90
+|===
+
+DataFrame의 인덱스를 사용하면 슬라이싱을 적용할 수 있습니다. 인덱스를 사용하는 것은 삭제대상이 row(행)임을 의미하므로, axis 파라미터를 사용하지 않아도 됩니다.
+
+[source, python]
+----
+df2.drop(df2.index[0:1], inplace=True)
+----
+
+[%header, cols=8, width=40%]
+|===
+||	name|	nation|	english|	math|	science|	korean|	physics
+|b|	James|	Germany|	80|	40|	30|	80|	90
+|===
+
