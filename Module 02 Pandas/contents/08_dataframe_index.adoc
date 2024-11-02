@@ -1,0 +1,108 @@
+= DataFrame 인덱스 사용
+
+* DataFrame의 인덱스를 활용하면 분석이 편리한 DataFrame을 만들 수 있음
+* set_index() 메소드를 사용하여 인덱스 지정
+* reindex() 메소드를 사용하여 인덱스 재지정
+
+---
+
+[%header, cols=6, width=40%]
+|===
+|  |name|nation |english    |math   |science
+|0 |Celine|France |90         |100    |100
+|1 |James|UK     |80         |40     |30
+|2 |Jason|USA    |20         |40     |60
+|3 |Hans|Germany|40         |50     |90
+|===
+
+== 인덱스 설정
+
+set_index() 메소드를 사용하여 특정 컬럼을 DataFrame의 행 인덱스로 지정할 수 있습니다. set_index() 메소드는 새 DataFrame을 return 하므로, 현재 DataFrame에 변경사항을 적용하려면 inplace 파라미터를 사용합니다. set_index()를 지정하면 기존의 행 인덱스는 삭제됩니다.
+
+[source, python]
+----
+df2 = df.set_index('name')
+----
+
+[%header, cols=5, width=40%]
+|===
+|  |nation |english    |math   |science
+|name||||
+|Celine|France |90         |100    |100
+|James|UK     |80         |40     |30
+|Jason|USA    |20         |40     |60
+|Hans|Germany|40         |50     |90
+|===
+
+list를 사용하면 두 개 이상의 컬럼을 인덱스로 지정할 수 있습니다.
+
+[source, python]
+----
+df3 = df.set_index(['name', 'nation'])
+----
+
+[%header, cols=5, width=40%]
+|===
+|  | |english    |math   |science
+|name|nation|||
+|Celine|France |90         |100    |100
+|James|UK     |80         |40     |30
+|Jason|USA    |20         |40     |60
+|Hans|Germany|40         |50     |90
+|===
+
+== 행(row) 인덱스 재배열
+
+DataFrame객체의 reindex() 메소드를 사용하여 DataFrame객체의 인덱스를 재 배열할 수 있습니다. 이 경우 재 설정되는 인덱스에 DataFrame에 존재는 값이 없으면 기존 데이터는 삭제되며, 기존에 존재하지 않은 인덱스가 생성되면 행의 모든 값이 NaN(Not a Number) 값이 할당됩니다. reindex() 메소드는 새 DataFrame 객체를 반환하며, inplace 파라미터를 사용할 수 없습니다.
+
+[source, python]
+----
+df4 = df2.reindex(['Celine','Jason', 'James','Robert'])
+----
+
+[%header, cols=5, width=40%]
+|===
+|  | |english    |math   |science
+|name|nation|||
+|Celine|France |90         |100    |100
+|Jason|USA    |20         |40     |60
+|James|UK     |80         |40     |30
+|Robert|NaN|NaN|Nan|Nan|
+|===
+
+== 행(row) 인덱스 초기화
+
+reset_index() 메소드를 사용하면 인덱스가 정수형 위치 인덱스로 변환되며, 기존 인덱스는 컬럼으로 재배치 됩니다. reset_index() 메소드는 새 DataFrame 객체를 return하며, inplace 파라미터를 사용할 수 있습니다.
+
+[source, python]
+----
+df3.reset_index(inplace=True)
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |name|nation |english    |math   |science
+|0 |Celine|France |90         |100    |100
+|1 |James|UK     |80         |40     |30
+|2 |Jason|USA    |20         |40     |60
+|3 |Hans|Germany|40         |50     |90
+|===
+
+== 행(row) 인덱스를 기준으로 정렬
+
+sort_index() 메소드를 사용하여 인덱스를 기준으로 데이터를 정렬할 수 있습니다.
+
+[source, python]
+----
+df4.sort_index()
+----
+
+[%header, cols=5, width=40%]
+|===
+|  | |english    |math   |science
+|name|nation|||
+|Celine|France |90         |100    |100
+|James|UK     |80         |40     |30
+|Jason|USA    |20         |40     |60
+|Robert|NaN|NaN|Nan|Nan|
+|===

@@ -297,3 +297,21 @@ df.loc[['a','c'], ['이름','나라']]
 |a |Celine|France
 |c |James|UK
 |===
+
+=== 데이터 졍렬
+
+sort_values() 메소드를 사용하여 데이터를 해당 컬럼 기준으로 정렬할 수 있습니다. 새 DataFrame을 return하며, inplace 옵션을 사용할 수 있습니다.
+
+[source, python]
+----
+df2 = df.sort_values('나라')
+----
+
+[%header, cols=6, width=40%]
+|===
+|  |이름|나라|영어|수학|과학
+|a |Celine|France |90         |100    |100
+|d |Hans|Germany|40         |50     |90
+|b |James|UK     |80         |40     |30
+|c |Jason|USA    |20         |40     |60
+|===

@@ -200,3 +200,61 @@ df2.drop(df2.index[0:1], inplace=True)
 |b|	James|	Germany|	80|	40|	30|	80|	90
 |===
 
+=== column(열) 삭제
+
+drop() 메소드의 axis 파라미터로 1을 주면 column을 삭제합니다.
+
+[source, python]
+----
+df2 = df.drop('physics', axis=1)
+----
+
+[%header, cols=7, width=40%]
+|===
+||	name|	nation|	english|	math|	science|	korean
+|a|	Celine|	France|	90|	100|	100|	80
+|b|	James|	Germany|	80|	40|	30|	80
+|c|	Jason|	USA|	80|	40|	60|	80
+|e|	Vesper|	USA|	100|	80|	100|	90
+|===
+
+ 첫 번째 파라미터로 list를 주면 여러 column을 삭제합니다.
+
+[source, python]
+----
+df2.drop(['science','korean'], axis=1, inplace=True)
+----
+
+[%header, cols=5, width=40%]
+|===
+||	name|	nation|	english|	math
+|a|	Celine|	France|	90|	100
+|b|	James|	Germany|	80|	40
+|c|	Jason|	USA|	80|	40
+|e|	Vesper|	USA|	100|	80
+|===
+
+DataFrame의 columns 속성을 사용하면 슬라이싱 할 수 있습니다.
+
+[source, python]
+----
+df2.drop(df2.columns[2:3], axis=1, inplace=True)
+----
+
+[%header, cols=5, width=40%]
+|===
+||	name|	nation|	math
+|a|	Celine|	France|	100
+|b|	James|	Germany|	40
+|c|	Jason|	USA|	40
+|e|	Vesper|	USA|	80
+|===
+
+
+Python의 del 문을 사용하여 열(column) 행(row)을 삭제할 수 있습니다. DataFrame 인덱서를 사용하면 컬럼을 선택하는데, del 문을 사용하여 해당 컬럼을 삭제합니다.
+
+[source, python]
+----
+del df2['math']
+----
+
