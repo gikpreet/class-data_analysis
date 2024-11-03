@@ -77,53 +77,59 @@ titles = ['titanic','terminator','true lies']
 result = titles + 10
 ----
 
-== DataFrame 산술 연산
+== 존재하지 않는 값 연산
 
-* 시리즈 연산을 확장
-* column/row 인덱스를 기준으로 정렬 후 1:1 대응되는 원소끼리 연산을 처리
+연산을 하는 두 Series 원소 개수가 다르거나, 크기가 같더라도 인덱스 값이 다를 수 있습니다. 어느 한쪽에만 인덱스가 존재하고, 다른 쪽에는 짝을 지을 수 있는 동일한 인덱스가 없는 경우 정상적으로 연산을 처리할 수 없어, 이런 경우 유효한 값이 존재하지 않는다는 의미를 같는 NaN으로 처리합니다.
 
-=== DataFrame, 숫자
+동일한 인덱스가 연산에 참여하는 Series에 존재하여 연산 대상 값이 대응되더라도 어느 한 쪽의 데이터 값이 존재하지 않는다면 NaN이 됩니다.
 
-* DataFrame에 어떤 숫자를 연산하면 모든 원소에 대해 연산을 수행
-+
 [source, python]
 ----
-df = pd.DataFrame({
-    'nation':   ['France','UK','USA','Germany'],
-    'english':  [90,80,80,60],
-    'math':     [100,40,40,50],
-    'science':  [100,30,60,90]
-})
-df.index = ['Celine','James','Jason','Hans']
+james = pd.Series({'국어':100, '영어':80, '수학':90})
+celine = pd.Series({'과학':80, '국어':90, '영어':100})
+total = celine + james
 ----
-+
-[%header, cols=5, width=40%]
-|===
-|       |nation |english    |math   |science
-|Celine |France |90         |100    |100
-|James  |UK     |80         |40     |30
-|Jason  |USA    |20         |40     |60
-|Hans   |Germany|40         |50     |90
-|===
-+
+
+----
+과학      NaN
+국어    190.0
+수학      NaN
+영어    180.0
+dtype: float64
+----
+
+== 연산 메소드
+
+Series객체의 add(), sub(), mul(), div() 메소드를 사용하여 각각 사칙연산을 수행할 수 있습니다.
+
 [source, python]
 ----
-df2 = df[['english', 'math','science']] + 10
+james = pd.Series({'국어':100, '영어':80, '수학':90})
+celine = pd.Series({'과학':80, '국어':90, '영어':100})
+total = celine.add(james)
 ----
-+
-[%header, cols=5, width=40%]
-|===
-|       |nation |english    |math   |science
-|Celine |France |100        |110    |110
-|James  |UK     |90         |50     |20
-|Jason  |USA    |30         |50     |70
-|Hans   |Germany|50         |60     |100
-|===
 
-=== DataFrame, DataFrame
+----
+과학      NaN
+국어    190.0
+수학      NaN
+영어    180.0
+dtype: float64
+----
 
-* 각 DataFrame의 같은 column, 같은 row에 있는 원소끼리 계산
-* 동일한 원소끼리 계산한 값을 원래 위치에 다시 입력하여 새 DataFrame을 생성
-* 어느 한쪽에 원소가 존재하지 않거나 NaN이면 연산 결과는 NaN으로 처리됨
+연산 결과가 NaN인 경우, fill_value 옵션을 설정하여 적용할 수 있습니다. 아래 코드는 NaN인 값을 0으로 간주하고 연산을 수행합니다.
 
-image:../images/image08.png[]
+[source, python]
+----
+james = pd.Series({'국어':100, '영어':80, '수학':90})
+celine = pd.Series({'과학':80, '국어':90, '영어':100})
+total = celine.add(james, fill_value=0)
+----
+
+----
+과학     80.0
+국어    190.0
+수학     90.0
+영어    180.0
+dtype: float64
+----
