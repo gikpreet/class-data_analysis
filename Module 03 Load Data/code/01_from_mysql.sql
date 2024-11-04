@@ -1,7 +1,5 @@
-USE Module06;
-
+# 테이블 생성
 CREATE TABLE movies (
-	row_num int,
 	movid_id int,
     title varchar(200),
     genre varchar(200)
@@ -14,18 +12,40 @@ CREATE TABLE ratings (
     timestamp int
 );
 
-drop table movies;
+CREATE TABLE users (
+	row_num int,
+    user_id int,
+    gender char(1),
+    age int,
+    occupation int,
+    zip varchar(10)
+);
 
+# 데이터 load 설정
+show variables like "secure_file_priv";
+
+# load data
 load data
-infile '/var/lib/mysql-files/ratings.csv'
+infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/movies.csv'
 into table movies
+character set latin1
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 lines terminated by '\n'
 IGNORE 1 ROWS;
 
-show variables like "secure_file_priv";
+load data
+infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/ratings.csv'
+into table ratings
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+lines terminated by '\n'
+IGNORE 1 ROWS;
 
-SELECT * FROM movies;
-
-SELECT * FROM ratings;
+load data
+infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users.csv'
+into table users
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+lines terminated by '\n'
+IGNORE 1 ROWS;

@@ -4,6 +4,32 @@ Pandas 라이브러리는 분석에 유용한 많은 메소드들을 제공합�
 
 == DataFrame 메소드
 
+**head() 메소드**
+
+상위 5개 데이터를 읽습니다.
+
+[source, python]
+----
+df.head()
+----
+
+**tail() 메소드**
+
+하위 5개 데이터를 읽습니다.
+
+[source, python]
+----
+df.tail()
+----
+
+**info() 메소드**
+
+각 컬럼별로 null값과 자료형을 출력합니다.
+
+**describe() 메소드**
+
+
+
 **pivot_table() 메소드**
 
 pivot_table() 보통 4개의 인자를 필수로 사용합니다.
