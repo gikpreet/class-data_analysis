@@ -1,3 +1,5 @@
+# 데이터 다운로드 https://grouplens.org/datasets/movielens/
+
 # 테이블 생성
 CREATE TABLE movies (
 	movid_id int,

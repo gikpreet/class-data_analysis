@@ -1,0 +1,21 @@
+= Pandas 파일 로드
+
+* Pandas는 다양한 형태의 외부 파일을 읽어와서 데이터 프레임으로 변환하는 함수를 가지고 있음
+* DataFrame을 다양한 유형의 파일로 저장할 수 있음
+
+[%header, cols=3, width=80%]
+|===
+|File Format    |Reader     |Writer
+|CSV            |read_csv   |to_csv
+|JSON           |read_json  |to_json
+|HTML           |read_html  |to_html
+|Local Clipboard|read_clipboard|to_clipboard
+|Microsoft Excel|read_excel|to_excel
+|HDFS5 Format   |read_hdf   |to_hdf
+|SQL            |read_sql   |to_sql
+|===
+
+---
+
+Pandas는 다양한 형태의 외부 파일을 읽어서 DataFrame으로 변환하는 함수를 제공합니다. 파일 형식이나 데이터의 형태와 관계없이 DataFrame에 적재되면 Pandas 프레임워크에서 제공하는 모든 함수와 기능을 자유롭게 사용할 수 있습니다. 적재하고 가공된 파일은 다양한 형태의 파일로 저장할 수도 있습니다.
+
