@@ -14,13 +14,11 @@ pandas.read_csv('file_name')
 ** 
 ** 2차원 구조를 가진 csv 형태로 저장할 수 있음
 +
-_DataFrame_object.to_csv('file_name')_
-+
 [source, python]
 ----
 df_boxoffice.to_csv('boxoffice.csv')
 ----
-
++
 [source, python]
 ----
 # 단순 파일 적재 (기본 구분자: ',')
