@@ -1,0 +1,41 @@
+= Markdown
+
+* DataFrame을 Markdown 형식의 테이블로 export를 지원
++
+[%header, cols="1,3", witdh=80%]
+|===
+|옵션|설명
+|buf|	출력할 버퍼. 지정하지 않으면 문자열로 반환됩니다.
+|mode|	파일 모드, 기본값은 'wt' (write text)입니다.
+|index|	출력할 때 인덱스 포함 여부, 기본값은 True입니다.
+|storage_option|	파일 저장시 추가 옵션을 지정할 수 있습니다.
+|**kwargs|	'tabulate' 라이브러리의 다양한 옵션을 지정할 수 있습니다. 예를 들어 tablefmt='fancy_grid' 옵션으로 표의 테두리 스타일을 변경할 수 있습니다. (이를 위해 tabulate 라이브러리를 설치해야 합니다)
+|===
+
+---
+
+DataFrame을 Markdown 형식의 테이블로 내보내기 할 수 있습니다.
+
+[source, python]
+----
+df = pd.DataFrame([ 
+    ['Celine', 'France', 90, 100, 100],
+    ['James','UK', 80, 40, 30],
+    ['Jason','USA',80, 40, 60],
+    ['Hans','Germany', 60, 50, 90]],
+    columns = ['name','nation','korean','english','math']
+)
+
+df.to_markdown('./data/markdown.md')
+----
+
+DataFrame은 아래와 같은 형식의 Markdown 테이블로 내보내기 됩니다.
+
+----
+|    | name   | nation   |   korean |   english |   math |
+|---:|:-------|:---------|---------:|----------:|-------:|
+|  0 | Celine | France   |       90 |       100 |    100 |
+|  1 | James  | UK       |       80 |        40 |     30 |
+|  2 | Jason  | USA      |       80 |        40 |     60 |
+|  3 | Hans   | Germany  |       60 |        50 |     90 |
+----

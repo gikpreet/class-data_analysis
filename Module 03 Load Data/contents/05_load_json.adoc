@@ -1,0 +1,58 @@
+= JSON
+
+* JavaScript Object Notation: JavaScript 객체 문법으로 구조화된 데이터를 표현하기 위한 문자 기반의 표준 포맷
+* Load
+** 일반적으로 Key:Value 구조, 구조가 중첩되는 방식에 따라 다르게 적용됨
+** read_json() 함수 사용
++
+[source, python]
+----
+df_json = pd.read_json('json_sample.json')
+----
+
+* Save
+** JSON 구조를 가진 파일로 저장할 수 있음
++
+[source, python]
+----
+df_boxoffice.to_json('boxoffice.json')
+----
+
+---
+
+JSON 저장 옵션은 다음과 같습니다.
+
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|path_or_buf|json파일이 생성되는 경로와 파일명 입니다.
+|orient|JSON 포맷을 지정합니다. +
+Series:
+default is ‘index’ allowed values are: {‘split’, ‘records’, ‘index’, ‘table’}.
+
+DataFrame: default is ‘columns’ allowed values are: {‘split’, ‘records’, ‘index’, ‘columns’, ‘values’, ‘table’}.
+
+The format of the JSON string: +
+‘split’ : dict like {‘index’ -> [index], ‘columns’ -> [columns], ‘data’ -> [values]} +
+‘records’ : list like [{column -> value}, … , {column -> value}] +
+‘index’ : dict like {index -> {column -> value}} +
+‘columns’ : dict like {column -> {index -> value}} +
+‘values’ : just the values array +
+‘table’ : dict like {‘schema’: {schema}, ‘data’: {data}} +
+Describing the data, where data component is like orient='records'.
+|date_format|날짜 형식을 지정합니다
+|double_presion|부동 소수점 값을 인코딩할 때 사용할 소수 자릿수를 지정합니다. 기본 값은 10이며, 최대값은 15입니다.
+|force_ascii|인코딩된 문자열을 ASCII로 표시할지를 결정합니다. 기본값은 True 입니다.
+|date_unit|인코딩할 시간 단위를 기록합니다.
+|line| 'orient' 옵션이 'records'로 지장된 경우 줄로 구분된 JSON 형식을 작성합니다. 기본 값은 False입니다.
+|compress|출력 데이터를 압축할 지 여부를 결정합니다.
+|index|인덱스는 'orient'가 'split', 'index', 'column' 또는 'table'인 경우에만 사용됩니다. 이 중 'index'와 'column'은 index=False를 지원하지 않습니다.
+|indent|각 레코드를 들여쓰기 하는데 사용되는 공백의 길이를 지정합니다.
+|Storage_option|특정 스토리지 연결에 적합한 추가 옵션(예: 호스트, 포트, 사용자 이름, 비밀번호 등). HTTP(S) URL의 경우 키-값 쌍이 헤더 옵션으로 전달됩니다 urllib.request.Request. 다른 URL(예: 's3://' 및 'gcs://'로 시작)의 경우 키-값 쌍이 로 전달됩니다 
+|mode|path_or_buf를 제공할 때 출력에 대한 IO 모드를 지정합니다. 허용되는 인수는 'w'(쓰기) 및 'a'(추가)뿐입니다. mode='a'는 line이 True이고 orient가 'records'인 경우에만 지원됩니다. 기본값은 w 입니다.
+|===
+
+
+

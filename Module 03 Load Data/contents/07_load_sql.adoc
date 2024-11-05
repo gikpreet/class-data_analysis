@@ -1,0 +1,98 @@
+= 관계 데이터베이스
+
+* Python은 관계 데이터베이스에 액세스 하기 위한 라이브러리를 제공
++
+[%header, cols='2,4', width=60%]
+|===
+|관계 데이터베이스|라이브러리
+|MySQL|pymysql
+|Microsoft SQL Server|pymssql
+|Oracle|oracledb
+|Postgres|psycopg2
+|===
+
+* Load
+** 데이터베이스와의 연결을 설정하고, Cursor 객체의 fetchall() 메소드를 사용하여 DataFrame으로 Load
+** 데이터베이스와의 연결을 설정하고, DataFrame 객체의 read_sql() 메소드를 사용하여 DataFrame으로 Load
+** 다양한 데이터베이스에 대한 라이브러리가 제공되며, 여러 방법을 사용할 수 있음
+* Save
+** 데이터베이스와의 연결을 설정하고, DataFrame 객체의 to_sql() 메소드를 사용하여 연결된 데이터베이스에 저장
+** 다양한 데이터베이스에 대한 라이브러리가 제공되며, 여러 방법을 사용할 수 있음
+
+---
+
+== Load
+
+Python은 다양한 데이터베이스 관리 시스템에 연결하기 위한 다양한 라이브러리를 제공합니다. Python에서 제공되는 다양한 라이브러리를 사용하여 데이터베이스 관리 시스템에 연결할 수 있으며, 연결된 데이터베이스에서 데이터를 패치하여 DataFrame으로 로드할 수 있습니다.
+
+=== Cursor 객체 사용
+
+데이터베이스에 연결한 후, Cursor 객체를 사용하여 쿼리를 실행하고 실행된 결과를 fetchall() 메소드로 return 받아 DataFrame으로 로드할 수 있습니다.
+
+[source, python]
+----
+import pymysql
+import pandas as pd
+
+sql_query = 'SELECT * FROM Table_name'
+
+conn = pymysql.connect(
+    host='127.0.0.1',
+    user='root',
+    password='kogpsd',
+    db='DatamotionMovieDatabase'
+)
+
+try:
+    cursor = conn.cursor()
+    cursor.execute(sql_query)
+
+    result = cursor.fetchall()
+except Exception as e:
+    print(e)
+finally:
+    conn.close()
+
+df = pd.DataFrame(result)
+----
+
+=== DataFrame의 read_sql() 메소드 사용
+
+데이터베이스와의 연결을 설정한 후, 데이터베이스 쿼리와 연결을 사용하여 DataFrame 객체의 read_sql() 메소드를 호출하여 return 받은 결과를 DataFrame에 적재할 수 있습니다.
+
+[source, python]
+----
+conn = pymysql.connect(
+    host='127.0.0.1',
+    user='root',
+    password='kogpsd',
+    db='DatamotionMovieDatabase'
+)
+
+try:
+    df_movie = pd.read_sql('SELECT * FROM Movie', conn)
+except Exception as e:
+    print(e)
+finally:
+    conn.close()
+----
+
+== Save
+
+데이터베이스와 연결을 설정한 후 연결을 통해 DataFrame 객체의 to_sql() 메소드를 호출하여 연결된 데이터베이스에 데이터를 저장합니다. sqlalchemy 라이브러리가 필요합니다.
+
+[source, python]
+----
+from sqlalchemy import create_engine
+
+db_connection_str = 'mysql+pymysql://root:kogpsd@localhost/FromPandas'
+engine = create_engine(db_connection_str)
+conn = engine.connect()
+
+try:
+    df_sql(name='student', con=engine, if_exists='replace')
+except Exception as e:
+    print(e)
+finally:
+    conn.close()
+----

@@ -1,0 +1,52 @@
+= Microsoft Excel
+
+* Load
+** Microsoft Excel 파일(xls, xlsx)의 column과 row는 DataFrame의 column과 row로 1:1 대응됨
+** read_excel() 함수 사용
++
+[source, python]
+----
+pandas.read_excel('file_name')
+
+# 단순 파일 적재
+df_titanic = pd.read_excel('titanic.xls')
+# worksheet 적재
+df_titanic = pd.read_excel('titanic.xls', sheet_name='titanic3')
+df_titanic = pd.read_excel('titanic.xls', sheet_name=0) # worksheet index
+# header(컬럼 이름)이 없는 경우
+df_titanic = pd.read_excel('titanic.xls', header=None)
+----
+
+* csv의 옵션을 그대로 사용할 수 있음
+
+* Save
+** DataFrame의 column과 row는 Excel 파일의 column과 row로 1:1로 대응됨
+** openpyxl 라이브러리가 필요함 (anaconda에서 미리 설치)
++
+[source, python]
+----
+df.to_excel('file_name')
+----
+
+* 옵션
++
+[%header, cols="1,4", width=100%]
+|===
+|옵션|설명
+|excel_writer|경로와 파일 이름을 설정하거나 ExcelWriter 객체를 지정합니다.
+|sheet_name|시트 이름을 설정해줍니다. 중복인 경우 덮어씌워집니다.
+|na_rep|결측치를 대체할 값을 설정합니다. 기본값은 공백(" ") 입니다.
+|float_format|부동소수점의 표현방식을 지정합니다.
+|columns|엑셀로 변환할 열을 지정합니다.
+|header|열 이름을 설정합니다. None인 경우에는 열이름을 출력하지 않습니다.
+|index|index의 출력 여부를 정합니다.
+|index_label|index명을 지정합니다. Multi Index의 경우 리스트 형식으로 지정해주어야합니다.
+|startrow / startcol|값이 입력되는 위치를 지정합니다.
+|engine|사용할 엔진을 지정합니다. 'openpyxl' 또는 'xlsxwriter'. io.excel.xlsx.writer, io.excel.xls.writer 및 io.excel.xlsm.writer 옵션을 통해 이를 설정할 수도 있습니다. 
+|merge_cells|Index가 중복인 경우 엑셀로 변환시 병합할지 정합니다. 기본값은 True로 병합이 됩니다.
+|encoding|결과 엑셀파일의 인코딩을 지정합니다. xlwt에만 필요하며 다른 경우는 기본 유니코드를 지원합니다.
+|inf_rep|엑셀은 기본적으로 무한에대한 표시형식이 없기때문에, 무한인 값을 어떻게 표시할지 정합니다. 기본값은 'inf' 입니다.
+|vervose|오류 로그에 추가 정보를 표시할지 여부입니다. 기본값은 True입니다.
+|freeze_panes|틀고정을 지정합니다. 튜플로 (값, 값) 형태로 지정합니다.
+|storage_options|특정 스토리지 연결에 적합한 추가 옵션을 지정합니다. (예 : 호스트, 포트, 사용자 이름, 비밀번호 등)
+|===
