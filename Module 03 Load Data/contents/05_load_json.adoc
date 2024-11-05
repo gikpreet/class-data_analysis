@@ -20,10 +20,47 @@ df_boxoffice.to_json('boxoffice.json')
 
 ---
 
-JSON 저장 옵션은 다음과 같습니다.
+== Load
 
-* 옵션
-+
+JSON은 JavaScript Object Notation의 약자로, 객체 문법으로 구조화 된 데이터를 표현하기 위한 문자 기반의 표준 포맷입니다. DataFrame에서 read_json() 메소드를 사용하여 구조화된 JSON 파일을 DataFrame으로 로드할 수 있습니다.
+
+가장 단순한 형태의 JSON 로드는 다음과 같습니다.
+
+[source, python]
+----
+df_boxoffice = pd.read_json('./data/boxoffice.json')
+----
+
+read_json() 메소드의 옵션은 다음과 같습니다.
+
+[%header, cols="1,1,4", width=100%]
+|===
+|옵션|기본값|설명
+|sep|,|자료의 구분 기준을 설정
+|header|infer|첫행을 열이름으로 쓸 것인지
+|names|-|열이름을 리스트로 입력해 줄 수있다. (header=None으로 자동 설정)
+|index_col|None|특정 열이름으로 인덱스를 지정
+|prefix|-|header가 없는 경우, ‘V’를 넣으면, V0,V1순으로 열이름 부여
+|dtype|-|개별 열 또는 모든 열의 타입을 지정(e.g ‘str’, {‘a’: np.float64, ‘c’: ‘Int64’})
+|na_values|-|결측값으로 인식할 문자열 지정
+|keep_default_na|True|결측값(NaN)을 포함할지 여부 결정
+|na_filter|True|결측값 탐지
+|skip_blank_lines|True|빈줄은 결측값으로 판단하지 않고 건너뜀
+|encoding|-|참고
+|nrow|-|읽을 파일 행(row)의 수
+|===
+
+== Save
+
+DataFrame 객체의 데이터를 to_json() 메소드를 사용하여 JSON 형태의 파일로 저장할 수 있습니다. 가장 단순한 형태의 저장은 다음과 같습니다.
+
+[source, python]
+----
+df_boxoffice.to_json('./data/from_json.json')
+----
+
+to_json 메소드의 옵션은 다음과 같습니다.
+
 [%header, cols="1,4", width=100%]
 |===
 |옵션|설명
