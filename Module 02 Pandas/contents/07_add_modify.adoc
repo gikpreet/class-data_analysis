@@ -86,6 +86,25 @@ df.loc['e'] = ['Vesper','USA',100,80,100,90,90]
 |e|Vesper|USA|100|80|100|90|90
 |===
 
+== 행(row) 자르기
+
+DataFrame 객체의 truncat() 메소드를 사용하면 데이터프레임을 자를 수 있습니다.
+
+[source, python]
+----
+df_j = df.truncate(before='b',after='c', axis=0)
+df_j
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|b|James|UK|80|40|30|80|80
+|c|Jason|USA|20|40|60|80|60
+|===
+
+axis 파라미터에 1을 사용하여 컬럼 기준으로 자를 수 있습니다.
+
 == Cell값 수정
 
 DataFrame의 특정 Cell을 선택하고 새로운 데이터를 지정하면 값이 변경됩니다. Cell 하나를 선택하여 변경할 수도 있고, 여러개의 원소를 선택하여 한꺼번에 값을 바꿀수도 있습니다.
@@ -124,7 +143,36 @@ df.loc[['a','b'], 'physics'] = [90,90]
 |e|Vesper|USA|100|80|100|90|90
 |===
 
-== row/column 위치 변경(Piviting)
+replace() 메소드를 사용하면 변경 대상 값을 대상으로 변경할 값을 주어 바꿀 수 있습니다.
+
+[source, python]
+----
+df_replaced = df.replace(to_replace='USA', value='America')
+----
+
+[%header, cols=8, width=40%]
+|===
+| |name|nation|english|math|science|korean|physics
+|a|Celine|France|90|100|100|80|90
+|b|James|Germany|80|40|30|80|90
+|c|Jason|America|20|40|60|80|60
+|d|Hans|Germany|40|50|90|80|70
+|e|Vesper|America|100|80|100|90|90
+|===
+
+replace() 메소드의 옵션은 아래와 같습니다.
+
+[%header, cols="1,1,3"]
+|===
+|파라미터|기본값|설명
+|to_replace|-|변경전 기존 값입니다.
+|value|-|변경될 값입니다.
+|inplace|False|원본을 변경할지 여부입니다.
+|limit|-|method 사용시 변경 될 갯수 입니다.
+|regex|False|regex 문법을 이용하여 변경값을 정합니다.
+|===
+
+== row/column 위치 변경(Pivoting)
 
 DataFrame의 row/column의 위치를 변경할 수 있습니다. 선형대수학의 전치행렬을 만드는 작업과 비슷한 개념입니다. 전치의 결과로 새 DataFrame 객체를 return 합니다.
 
@@ -258,3 +306,154 @@ Python의 del 문을 사용하여 열(column) 행(row)을 삭제할 수 있습�
 del df2['math']
 ----
 
+열을 꺼낼 수 있습니다. 열을 꺼내면 원본 DataFrame에서 해당 열이 제거됩니다. DataFrame의 pop() 메소드를 사용하면 DataFrame에서 해당 열이 제거됩니다. 꺼낸 열은 Series 타입 객체입니다.
+
+[source, python]
+----
+nation = df2.pop('nation')
+----
+
+----
+a     France
+b    Germany
+c        USA
+d    Germany
+e        USA
+Name: nation, dtype: object
+----
+
+== DataFrame 복사
+
+아래와 같이 DataFrame을 다른 변수에 할당하면 shallow copy가 됩니다.
+
+[source, python]
+----
+df_copy = df
+----
+
+이 경우, df의 값을 변경하면 df_copy의 값도 변경됩니다.
+
+[source, python]
+----
+df['nation']['b'] = 'Korea'
+print(df_copy['nation']['b'])
+----
+
+----
+Korea
+----
+
+DataFrame의 copy() 메소드를 사용하면 DataFrame을 deep copy할 수 있습니다. deep 키워드 파라미터의 값을 True로하면 deep copy, False로 하면 shallow copy를 수행하며, 기본 값은 True 입니다.
+
+[source, python]
+----
+df_copy = df.copy(deep=True)
+----
+
+copy() 메소드의 옵션은 다음과 같습니다.
+
+[%header, cols="1,2,3", width=60%]
+|===
+|파라미터|기본값|설명
+|deep|True|Deep copy를 수행할 지(True), Shallow copy를 수행할 지(False) 여부를 결정합니다.
+|===
+
+== 중복행 제거
+
+drop_duplicate() 메소드를 사용하면 DataFrame에서 중복행을 제거합니다.
+
+아래와 같은 DataFrame이 있을 때, 
+
+[%header, cols=6, width=40%]
+|===
+| |name|nation|english|math|science
+|a|Celine|France|90|100|100
+|b|James|UK|80|40|30
+|c|Jason|USA|20|40|60
+|d|Hans|Germany|40|50|90
+|a|Celine|France|90|100|100
+|b|James|UK|80|40|30
+|c|Jason|USA|20|40|60
+|d|Hans|Germany|40|50|90
+|===
+
+drop_duplicate() 메소드를 사용하면 DataFrame에서 모든 중복행을 제거합니다.
+
+[source, python]
+----
+df_duf.drop_duplicates(inplace=True)
+----
+
+[%header, cols=6, width=40%]
+|===
+| |name|nation|english|math|science
+|a|Celine|France|90|100|100
+|b|James|UK|80|40|30
+|c|Jason|USA|20|40|60
+|d|Hans|Germany|40|50|90
+|===
+
+drop_duplicate() 메소드의 옵션은 다음과 같습니다.
+
+[%header, cols="1,1,3"]
+|===
+|파라미터|기본값|설명
+|subset|-|중복값을 검사할 열을 지정합니다. 기본적으로 모든 열을 검사합니다.
+|keep|'first'| {first / last} 중복제거를할때 남길 행입니다. first면 첫값을 남기고 last면 마지막 값을 남깁니다.
+|inplace|False|원본을 변경할지의 여부입니다
+|ignore_index|False|원래 index를 무시할지 여부입니다. True일 경우 0,1,2, ... , n으로 부여됩니다.
+|===
+
+== 피봇 변환
+
+pivot() 메소드를 사용하면 데이터의 열을 기준으로 피봇 테이블로 변환할 수 있습니다.
+
+[source, python]
+----
+df.pivot(index='nation', columns='name', values='english')
+----
+
+[%header, cols=6, width=60%]
+|===
+||name|nation|english|math|science
+|a|	Celine|	France|	90|	100|	100
+|b|	James|	Germany|	80|	40|	30
+|c|	Jason|	USA|	80|	40|	60
+|d|	Hans|	Germany|	60|	50|	90
+|===
+
+pivot() 메소드의 옵션은 다음과 같습니다.
+
+[%header, cols="1,2,3", width=60%]
+|===
+|파라미터|기본값|설명
+|index|-|행 인덱스로 사용될 열입니다
+|columns|-|컬럼으로 사용될 열입니다
+|values|-|값으로 입력될 열입니다
+|===
+
+**pivot_table() 메소드**
+
+pivot_table() 보통 4개의 인자를 필수로 사용합니다.
+
+* index: 행 인덱스
+* columns: 열 인덱스
+* values: 데이터 값
+* aggfunc: 데이터 집계함수
+
+[source, python]
+----
+df_객실등급별_남녀의나이_중간값 = pd.pivot_table(titanic,
+                    index = 'Pclass',    # 행 위치에 들어갈 열
+                    columns = 'Sex',    # 열 위치에 들어갈 열
+                    values = 'Age',     # 데이터로 사용할 열
+                    aggfunc = 'mean')   # 데이터 집계함수
+----
+
+타이타닉 예제에 위 메소드를 실행하면 결과는 아래와 같습니다.
+
+image:../images/image09.png[]
+
+help() 함수를 통해 pivot_table() 메소드의 설명을 볼 수 있습니다.
+
+https://wikidocs.net/155458

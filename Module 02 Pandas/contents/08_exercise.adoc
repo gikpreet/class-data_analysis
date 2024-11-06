@@ -226,7 +226,6 @@ df_pop_trans = df_pop.transpose()
 df_pop_trans
 ----
 
-
 == 정렬
 
 * index를 정수형 index로 초기화

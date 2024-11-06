@@ -351,29 +351,3 @@ df.english.corr(df.math,method='kendall')
 **corrwith() 메소드**
 
 두 DataFrame 객체의 동일한 행/열 간의 상관계수를 return 합니다.
-
-**pivot_table() 메소드**
-
-pivot_table() 보통 4개의 인자를 필수로 사용합니다.
-
-* index: 행 인덱스
-* columns: 열 인덱스
-* values: 데이터 값
-* aggfunc: 데이터 집계함수
-
-[source, python]
-----
-df_객실등급별_남녀의나이_중간값 = pd.pivot_table(titanic,
-                    index = 'Pclass',    # 행 위치에 들어갈 열
-                    columns = 'Sex',    # 열 위치에 들어갈 열
-                    values = 'Age',     # 데이터로 사용할 열
-                    aggfunc = 'mean')   # 데이터 집계함수
-----
-
-타이타닉 예제에 위 메소드를 실행하면 결과는 아래와 같습니다.
-
-image:../images/image09.png[]
-
-help() 함수를 통해 pivot_table() 메소드의 설명을 볼 수 있습니다.
-
-https://wikidocs.net/155458
