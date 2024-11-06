@@ -1,6 +1,19 @@
-= DataFrame 결합과 가공
+= DataFrame 결합
 
 * Pandas는 다양한 분석 위한 DataFrame의 결합 기능을 제공
 
 ---
 
+== DataFrame 결합
+
+**combine() 메소드**
+
+**combine_first() 메소드**
+
+**join() 메소드**
+
+**merge() 메소드**
+
+**align() 메소드**
+
+**update() 메소드**

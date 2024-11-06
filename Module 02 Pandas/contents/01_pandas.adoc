@@ -1,6 +1,17 @@
-= Pandas 라이브러리
+= Module 03 Pandas 라이브러리
 
 Pandas는 쉽고 직관적인 관계형 또는 분류된 데이터로 작업 할 수 있도록 설계된 빠르고 유연하며 표현이 풍부한 데이터 구조를 제공하는 Python 패키지입니다. 이 단원에서는 Python에서 사용할 수 있는 Pandas 라이브러리와 사용법을 알아봅니다.
 
 == Table of Contents
 
+1. Pandas 라이브러리 소개
+2. Pandas 라이브러리 구조
+3. Series
+4. DataFrame
+5. DataFrame 데이터 조회
+6. 컬럼/행(row) 추가, 데이터 변경, 삭제
+7. DataFrame 인덱스 사용
+8. 산술연산: Series
+9. 산술연산: DataFrame
+10. Pandas 메소드
+11. DataFrame 결합과 가공
