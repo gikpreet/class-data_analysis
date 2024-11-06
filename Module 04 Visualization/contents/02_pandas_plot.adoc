@@ -21,7 +21,7 @@ DataFrame 객체의 plot() 메소드의 옵션은 아래와 같습니다.
 |ax|현재 figure의 axes 입니다. (fig와 axes의 개념은 아래 링크 참고)
 |subplot|각 열들을 별개의 서브차트로 플로팅할지의 여부입니다.
 |sharex / sharey|subplot=True 인 경우 각축의 눈금을 공유할지 여부 입니다.
-|layout|튜플로 입력하는 subplot의 배열입니다.
+|layout|투플로 입력하는 subplot의 배열입니다.
 |figsize|출력할 fig의 크기 입니다.
 |use_index|인덱스를 x축의 눈금으로 사용할지 여부 입니다.
 |title|fig의 제목 입니다.
