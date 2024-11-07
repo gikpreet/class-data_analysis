@@ -119,3 +119,108 @@ plt.show()
 ----
 
 image:../images/image11.png[]
+
+== 서식 사용
+
+pyplot 개체의 style 속성을 사용하면 지정된 서식을 사용할 수 있습니다. style은 색, 폰트 등 디자인적 요소들을 사전에 지정된 스타일로 지정해 놓은 것으로, 많은 코드의 사용없이 지정된 서식을 차트에 적용할 수 있습니다. style은 지정되면 
+
+[source, python]
+----
+# 연도별 흥행수익
+plt.figure(figsize=(14, 5))
+plt.style.use('ggplot')
+
+plt.plot(df[['release_year','boxoffice_ww_gross']].groupby('release_year').sum())
+plt.plot(df[['release_year','boxoffice_us_gross']].groupby('release_year').sum())
+plt.plot(df[['release_year','budget']].groupby('release_year').sum())
+
+plt.title('연도별 흥행 수익 추이')
+plt.xlabel('연도')
+plt.ylabel('수익')
+
+plt.legend(labels=['세계 흥행 수입','미국 흥행 수입','예산'], loc='best')
+plt.xticks(range(1930, 2030, 10))
+
+plt.show()
+----
+
+image:../images/image12.png[]
+
+== 화면 분할
+
+axe 개체를 사용하면 화면을 여러개로 분할하고 분할된 각 화면에 서로 다른 그래프를 그릴 수 있습니다. 분할된 그래프를 그리기 위해, 여러 개의 axe 객체를 만들고 분할된 화면마다 하나의 axe 객체를 배정하는 방식으로 화면을 분할 할 수 있습니다. axe 객체를 하나만 생성하면 하나의 그래프만 표시됩니다.
+
+방법은 다음과 같습니다.
+
+1. figure() 함수를 사용하여 그래프를 그리는 그림틀을 만듭니다.
+* figsize 파라미터로 그림틀의 크기를 조절할 수 있습니다.
+2. figure 객체의 add_subplot() 메소드를 사용하여 그림틀을 여러개로 분할합니다.
+* 각 나눠진 부분을 axe 객체라고 부릅니다.
+* subplot() 메소드의 인자에 행의 크기, 열의 크기, 서브플롯 순서를 차례대로 지정합니다.
+3. 각 axe 객체에 차트를 그립니다.
+4. 각 axe 객체의 제목, 축 등을 설정합니다.
+* 제목은 set_title() 메소드로 지정합니다.
+* x축 레이블은 set_xlabel() 메소드로 지정합니다.
+* y축 레이블은 set_ylabel() 메소드로 지정합니다.
+* x축 설정은 set_xticks() 메소드로 지정합니다.
+* 범례는 legend() 메소드로 지정합니다.
+5. 전체 그래프를 그립니다.
+
+아래와 같이 화면 분할된 그래프를 그릴 수 있습니다.
+
+[source, python]
+----
+fig = plt.figure(figsize=(14, 10))
+
+ax1 = fig.add_subplot(2, 1, 1)
+ax2 = fig.add_subplot(2, 1, 2)
+
+ax1.plot(df[['release_year','boxoffice_ww_gross']].groupby('release_year').sum())
+ax1.plot(df[['release_year','boxoffice_us_gross']].groupby('release_year').sum())
+ax1.plot(df[['release_year','budget']].groupby('release_year').sum())
+
+ax2.plot(df_ratio['revenue_ratio'])
+
+ax1.set_title('연도별 흥행 수익 추이')
+ax1.set_xlabel('연도')
+ax1.set_ylabel('수익')
+ax1.set_xticks(range(1930, 2030, 10))
+ax1.legend(labels=['세계 흥행 수입','미국 흥행 수입','예산'], loc='best')
+
+ax2.set_title('연도별 수익율 추이')
+ax2.set_xlabel('연도')
+ax2.set_ylabel('수익율(%)')
+ax2.set_xticks(range(1930, 2030, 10))
+ax2.legend(labels=['수익율'], loc='upper left')
+
+plt.show()
+----
+
+image:../images/image13.png[]
+
+== 모양과 색상
+
+plot() 메소드의 옵션을 지정하여 선의 색상/모양 및 점의 모양과 색상을 지정할 수 있습니다. 관련 옵션은 matplotlib 공식 홈페이지에서 참조할 수 있습니다.
+
+link:https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html[matplotlib.pyplot.plot]
+
+[source, python]
+----
+plt.figure(figsize=(14, 5))
+plt.style.use('ggplot')
+
+plt.plot(df[['release_year','boxoffice_ww_gross']].groupby('release_year').sum(), marker='o', markerfacecolor='orange')
+plt.plot(df[['release_year','boxoffice_us_gross']].groupby('release_year').sum(), marker='v')
+plt.plot(df[['release_year','budget']].groupby('release_year').sum(), marker='P', color='black', markerfacecolor='white')
+
+plt.title('연도별 흥행 수익 추이')
+plt.xlabel('연도')
+plt.ylabel('수익')
+
+plt.legend(labels=['세계 흥행 수입','미국 흥행 수입','예산'], loc='best')
+plt.xticks(range(1930, 2030, 10))
+
+plt.show()
+----
+
+image:../images/image14.png[]
