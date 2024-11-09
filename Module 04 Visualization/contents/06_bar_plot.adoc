@@ -39,3 +39,174 @@ except Exception as e:
 finally:
     conn.close()
 ----
+
+== DataFrame에 적재된 Dataset
+
+[%header, cols=12]
+|===
+||CustomerID|Title|FirstName|LastName|CompanyName|	ShipMethod|	UnitPrice|	ProductName|ProductNumber|Color|CategoryName
+|0|29847|Mr.|David|Hodgson|Good Toys|CARGO TRANSPORT 5|356.898|ML Road Frame-W - Yellow, 48|FR-R72Y-48|Yellow|Road Frames
+|1|29847|Mr.|David|Hodgson|Good Toys|CARGO TRANSPORT 5|356.898|ML Road Frame-W - Yellow, 38|FR-R72Y-38|Yellow|Road Frames
+|2|30072|Ms.|Andrea|Thomsen|West Side Mart|CARGO TRANSPORT 5|63.900|Rear Brakes|RB-9231|Silver|Brakes
+|3|30113|Mr.|Raja|Venugopal|Nearby Cycle Shop|CARGO TRANSPORT 5|218.454|ML Mountain Frame-W - Silver, 42|FR-M63S-42|Silver|Mountain Frames
+|4|30113|Mr.|Raja|Venugopal|Nearby Cycle Shop|CARGO TRANSPORT 5|461.694|Mountain-400-W Silver, 46|BK-M38S-46|Silver|Mountain Bikes
+|===
+
+== 성별 판매량 
+
+[source, python]
+----
+df_by_title = df[['Title','UnitPrice']].groupby('Title').sum()
+----
+
+[%header, cols="1,2", width=30%]
+|===
+||UnitPrice
+|Title|
+|Mr.|151327.0185
+|Ms.|56156.9802
+|Sra.|31.5840
+|===
+
+성별 판매량 bar plot
+
+[source, python]
+----
+plt.style.use('ggplot')
+
+df_by_title.plot(kind='bar')
+
+plt.title('성별 판매량')
+plt.xlabel('성별')
+plt.ylabel('판매량')
+
+plt.show()
+----
+
+image:../images/image17.png[]
+
+== 이름별 판매량
+
+[source, python]
+----
+df_by_name = df[['Title','UnitPrice']]
+df_by_name['name'] = df['FirstName'] + " " + df['LastName']
+df_by_name.drop('Title',axis=1, inplace=True)
+df_by_name = df_by_name.groupby('name').sum()
+----
+
+[%header, cols="2,2", width=40%]
+|===
+||UnitPrice
+|name|
+|Andrea Thomsen|63.9000
+|Anthony Chor|14016.5940
+|Brigid Cavendish|858.9000
+|Catherine Abel|17880.1080
+|Christopher Beck|17251.3920
+|Cory Booth|2400.0842
+|David Hodgson|713.7960
+|Donald Blanton|1680.5880
+|Frank Campbell|13564.0380
+|Guy Gilbert|13.6022
+|Janeth Esteves|31.5840
+|Jeffrey Kurtz|14508.9900
+|Jon Grande|15200.1989
+|Joseph Mitzner|2736.4440
+|Joyce Jarvis|4876.5240
+|Kevin Liu|11846.2578
+|Krishna Sunkammurali|16045.1022
+|Linda Mitchell|5.3940
+|Matthew Miller|1460.9820
+|Melissa Marple|2207.9760
+|Michael John Troyer|564.6240
+|Pamala Kotc|11884.3482
+|Pei Chow|8179.6860
+|Raja Venugopal|10320.3000
+|Rebecca Laszlo|17710.4580
+|Richard Byham|142.4940
+|Roger Van Houten|1430.6460
+|Rosmarie Carroll|669.3720
+|Terry Eminhizer|16934.8390
+|Vassar Stern|500.3040
+|Walter Brian|91.5780
+|Walter Mays|1724.4782
+|===
+
+이름별 판매량 bar plot
+
+[source, python]
+----
+plt.style.use('ggplot')
+
+df_by_name.plot(kind='bar',figsize=(15, 10))
+
+plt.title('이름별 판매량')
+plt.xlabel('이름')
+plt.ylabel('판매량')
+
+plt.show()
+----
+
+image:../images/image18.png[]
+
+== 회사별 판매량
+
+[source, python]
+----
+df_by_company = df[['CompanyName','UnitPrice']]
+df_by_company = df_by_company.groupby('CompanyName').sum()
+----
+
+[%header, cols="3,2", width=50%]
+|===
+||UnitPrice
+|CompanyName|
+|Action Bicycle Specialists|16934.8390
+|Aerobic Exercise Company|669.3720
+|Bulk Discount Store|17251.3920
+|Central Bicycle Specialists|31.5840
+|Channel Outlet|142.4940
+|Closest Bicycle Store|11884.3482
+|Coalition Bike Company|1680.5880
+|Discount Tours|2207.9760
+|Eastside Department Store|11846.2578
+|Engineered Bike Systems|2736.4440
+|Essential Bike Works|5.3940
+|Extreme Riding Supplies|14016.5940
+|Futuristic Bikes|91.5780
+|Good Toys|713.7960
+|Instruments and Parts Company|17710.4580
+|Many Bikes Store|14508.9900
+|Metropolitan Bicycle Supply|16045.1022
+|Nearby Cycle Shop|10320.3000
+|Paints and Solvents Company|4876.5240
+|Professional Sales and Service|17880.1080
+|Remarkable Bike Store|2400.0842
+|Riding Cycles|15200.1989
+|Sports Products Store|1724.4782
+|Sports Store|1430.6460
+|Tachometers and Accessories|1460.9820
+|The Bicycle Accessories Company|13.6022
+|Thrifty Parts and Sales|564.6240
+|Thrilling Bike Tours|8179.6860
+|Trailblazing Sports|13564.0380
+|Transport Bikes|500.3040
+|Vigorous Sports Store|858.9000
+|West Side Mart|63.9000
+|===
+
+회사별 판매량 bar plot
+
+[source, python]
+----
+plt.style.use('ggplot')
+
+df_by_company.plot(kind='barh',figsize=(15, 10))
+
+plt.title('회사별 판매량')
+plt.xlabel('회사명')
+plt.ylabel('판매량')
+
+plt.show()
+----
