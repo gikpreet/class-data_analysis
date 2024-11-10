@@ -1,0 +1,84 @@
+= 누락 데이터 확인
+
+* DataFrame에는 값이 누락되는 경우가 많음
+* 파일 형식을 변경하는 과정에서 파일이 누락되는 경우가 많음
+* 누락된 데이터는 NaN(Not a Number)로 표시함
+* 누락 데이터가 많아지면 데이터의 품질이 떨어지고, 알고리즘을 왜곡하는 현상이 일어남
+
+---
+
+Seaborn 패키지에서 제공하는 titanic 데이터셋을 확인해 봅시다.
+
+[source, python]
+----
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df_titanic = sns.load_dataset('titanic')
+df_titanic.head()
+----
+
+[%header, cols=16]
+|===
+||survived|pclass|sex|age|sibsp|parch|fare|embarked|class|who|adult_male|deck|embark_town|alive|alone
+|0|	0|	3|	male|	22.0|	1|	0|	7.2500|	S|	Third|	man|	True|	NaN|	Southampton|	no|	False
+|1|	1|	1|	female|	38.0|	1|	0|	71.2833|C|	First|	woman|	False|	C|Cherbourg|	yes|	False
+|2|	1|	3|	female|	26.0|	0|	0|	7.9250|	S|	Third|	woman|	False|	NaN|	Southampton|	yes|	True
+|3|	1|	1|	female|	35.0|	1|	0|	53.1000|S|	First|	woman|	False|	C|	Southampton|	yes|	False
+|4|	0|	3|	male|	35.0|	0|	0|	8.0500|	S|	Third|	man|	True|	NaN|	Southampton|	no|	True
+|===
+
+head() 메소드로 출력하면 'deck' 열에 값이 있습니다. 이 승객의 경우 몇 번 데크에 승선했는지 데이터가 없다는 뜻입니다.
+
+info() 메소드로 DataFrame의 요약정보를 출락하면 각 열에 속하는 데이터에서 결측치를 제외한 값을 보여줍니다. 
+
+[source, python]
+----
+df_titanic.info()
+----
+
+----
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 15 columns):
+ #   Column       Non-Null Count  Dtype   
+---  ------       --------------  -----   
+ 0   survived     891 non-null    int64   
+ 1   pclass       891 non-null    int64   
+ 2   sex          891 non-null    object  
+ 3   age          714 non-null    float64 
+ 4   sibsp        891 non-null    int64   
+ 5   parch        891 non-null    int64   
+ 6   fare         891 non-null    float64 
+ 7   embarked     889 non-null    object  
+ 8   class        891 non-null    category
+ 9   who          891 non-null    object  
+ 10  adult_male   891 non-null    bool    
+ 11  deck         203 non-null    category
+ 12  embark_town  889 non-null    object  
+ 13  alive        891 non-null    object  
+ 14  alone        891 non-null    bool    
+dtypes: bool(2), category(2), float64(2), int64(4), object(5)
+memory usage: 80.7+ KB
+----
+
+deck에 결측치가 많은 것을 알 수 있습니다. 결측치의 수는 시리즈 객체의 value_conunts() 메소드를 호출하여 알 수 있습니다. 결과에 결측치를 포함하기 위해서는 dropna 파라미터에 False값을 주어야 합니다.
+
+[source, python]
+----
+df_titanic['deck'].value_counts(dropna=False)
+----
+
+----
+deck
+NaN    688
+C       59
+B       47
+D       33
+E       32
+A       15
+F       13
+G        4
+Name: count, dtype: int64
+----

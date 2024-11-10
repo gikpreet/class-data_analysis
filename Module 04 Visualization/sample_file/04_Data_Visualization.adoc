@@ -43,7 +43,7 @@ sr_one = df_seoul.loc['경기도']
 plt.plot(sr_one.index, sr_one.values)
 ----
 +
-image:./images/image01.png[]
+image:images/image01.png[]
 
 === 차트 제목, 축 이름 추가
 
