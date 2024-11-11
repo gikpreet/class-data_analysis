@@ -6,9 +6,159 @@
 
 == DataFrame 결합
 
-**combine() 메소드**
+=== combine() 메소드
 
-**combine_first() 메소드**
+combine() 메소드를 사용하면 Series 객체와 DataFrame 객체를 함수를 사용하여 결합할 수 있습니다.
+
+combine() 메소드의 파라미터는 아래와 같습니다.
+
+_DataFrame.combine(other, func, fill_value=None, overwrite=True)_
+
+[%header, cols="1,2,4"]
+|===
+|파라미터|기본값|설명
+|other|-|결합할 DataFrame 객체입니다.
+|func|-|결함에 이용할 함수입니다.
+|fill_value|-|결합하기전 NaN의 값을 대체할 값입니다.
+|overwrite|True|other에 존재하지 않는 self의 열의 값을 NaN으로 대체합니다.
+|===
+
+아래 코드는 두 Series를 각 row의 값을 더한 Series로 합칩니다.
+
+[source, python]
+----
+group_1 = pd.Series([5,3,8])
+group_2 = pd.Series([1,3,8,4])
+
+sum = group_1.combine(group_2, (lambda x, y: x + y))
+----
+
+----
+0     6.0
+1     6.0
+2    16.0
+3     NaN
+dtype: float64
+----
+
+같은 형식으로, DataFrame의 각 값들을 결합하여 새 DataFrame을 만들 수 있습니다.
+
+아래와 같은 DataFrame이 있을 때,
+
+df1:
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|1.0|3|4
+|row2|NaN|8|2
+|row3|3.0|6|7
+|===
+
+df2
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|7|2|3
+|row2|2|4|2
+|row3|3|1|5
+|===
+
+아래 코드는 두 DataFrame을 각 Cell 값 중 큰 값만 사용하여 결합합니다.
+
+[source, python]
+----
+df_max_values = df1.combine(df2,np.maximum)
+----
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|7.0|3|4
+|row2|NaN|8|2
+|row3|3.0|6|7
+|===
+
+아래 코드는 각 cell의 값을 합친 값들로 결합합니다.
+
+[source, python]
+----
+df_sum_values = df1.combine(df2,lambda x, y: x + y)
+----
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|8.0|5|7
+|row2|NaN|12|4
+|row3|3.0|6|7
+|===
+
+아래 코드는 self DataFrame에 결측치가 있을 때 결측치를 0으로 치환 후 뺄셈한 값으로 결합합니다.
+
+[source, python]
+----
+df_sub_values = df1.combine(df2, lambda x, y: x - y, fill_value=0)
+----
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|-6.0|1|1
+|row2|-2.0|4|0
+|row3|-1.0|5|2
+|===
+
+=== combine_first() 메소드
+
+combine() 메소드는 other의 값으로 self DataFrame의 NaN 값을 덮어씁니다. 주로 결측치를 메울 때 사용됩니다.
+
+combine() 메소드의 파라미터는 아래와 같습니다.
+
+_DataFrame.combine_first(other)_
+
+[%header, cols="1,2,4"]
+|===
+|파라미터|기본값|설명
+|other|-|결합할 DataFrame 객체입니다.
+|===
+
+아래와 같은 데이터 Frame들이 있을 때,
+
+df1:
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|NaN|NaN|1
+|row2|NaN|NaN|1
+|row3|1.0|1.0|1
+|===
+
+df2:
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|2|2.0|2
+|row2|2|NaN|2
+|row3|2|1.0|2
+|===
+
+아래 코드는 self DataFrame의 결측치(NaN 값)를 other DataFrame의 같은 위치의 인수로 덮어씁니다. self의 값이 NaN이고, other도 NaN이면 NaN을 가집니다.
+
+[source, python]
+----
+df_after_combine = df1.combine_first(df2)
+----
+
+[%header, cols=4, width=30%]
+|===
+||col1|col2|col3
+|row1|2.0|2.0|1
+|row2|2.0|NaN|1
+|row3|1.0|1.0|1
+|===
 
 **join() 메소드**
 
@@ -20,7 +170,7 @@
 
 == 그룹화
 
-**groupby() 메소드**
+=== groupby() 메소드
 
 데이터를 그룹화하여 연산을 수행합니다. 옵션은 다음과 같습니다.
 
