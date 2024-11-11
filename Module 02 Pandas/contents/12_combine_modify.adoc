@@ -14,7 +14,7 @@ combine() 메소드의 파라미터는 아래와 같습니다.
 
 _DataFrame.combine(other, func, fill_value=None, overwrite=True)_
 
-[%header, cols="1,2,4"]
+[%header, cols="1,1,4"]
 |===
 |파라미터|기본값|설명
 |other|-|결합할 DataFrame 객체입니다.
@@ -117,7 +117,7 @@ combine() 메소드의 파라미터는 아래와 같습니다.
 
 _DataFrame.combine_first(other)_
 
-[%header, cols="1,2,4"]
+[%header, cols="1,1,4"]
 |===
 |파라미터|기본값|설명
 |other|-|결합할 DataFrame 객체입니다.
@@ -160,13 +160,490 @@ df_after_combine = df1.combine_first(df2)
 |row3|1.0|1.0|1
 |===
 
-**join() 메소드**
+=== join() 메소드
 
-**merge() 메소드**
+join() 메소드를 사용하면 두 DataFrame 객체를 인덱스를 기준으로 병합할 수 있습니다. SQL의 테이블 조인과 유사합니다.
 
-**align() 메소드**
+join() 메소드의 파라미터는 아래와 같습니다.
 
-**update() 메소드**
+_DataFrame.join(other, on=None, how='left', lsuffix='', rsuffix='', sort=False)_
+
+[%header, cols="1,1,4"]
+|===
+|파라미터|기본값|설명
+|other|-|self와 접합할 DataFrame 객체입니다.
+|on|-|self의 열이나 인덱스 중에서 other의 어떤 열을 기준으로 결합할지 지정합니다. other의 인덱스 기준이 아닌 특정 열을 기준으로 병합할 때 on 인수를 사용합니다.
+|how|'left'| {left : self기준 / right : other기준 / inner : 교집합 / outer : 합집합} 출력할 인덱스의 기준입니다.
+|lsuffix / rsffix|-|이름이 중복되는 열이 있을 때 그 열에 추가로 붙일 접미사입니다. lsuffix는 self의 열에 붙을 접미사고, rsuffix는 other의 열에 붙을 접미사입니다.
+|sort|False|출력되는 데이터의 index를 사전적으로 정렬할지 여부입니다.
+|===
+
+아래와 같은 3개의 DataFrame들이 있을 때, 
+
+df1:
+[%header, cols=2, width=30%]
+|===
+||col1
+|row3|1
+|row2|2
+|row1|3
+|===
+
+df2:
+[%header, cols=2, width=30%]
+|===
+|| col2
+|row4|13
+|row3|14
+|===
+
+df3:
+[%header, cols=2, width=30%]
+|===
+||col1
+|row4|23
+|row3|24
+|===
+
+how 파라미터로 관계 데이터베이스의 left, right, outer 조인과 유사한 접합을 실행할 수 있습니다.
+
+how=left인 경우 (기본값) df1의 인덱스를 기준으로 합니다.
+
+[source, python]
+----
+df1.join(df2,how='left')
+----
+
+[%header, cols=3, width=40%]
+|===
+||col1|col2
+|row3|1|14.0
+|row2|2|NaN
+|row1|3|NaN
+|===
+
+how=right인 경우 df2의 인덱스를 기준으로 합니다.
+
+[source, python]
+----
+df1.join(df2,how='right')
+----
+
+[%header, cols=3, width=40%]
+|===
+||col1|col2
+|row4|NaN|13
+|row3|1.0|14
+|===
+
+how=outer인 경우 df1와 df2의 인덱스의 합집합을 기준으로 합니다.
+
+[source, python]
+----
+df1.join(df2,how='outer')
+----
+
+[%header, cols=3, width=40%]
+|===
+||col1|col2
+|row1|3.0|NaN
+|row2|2.0|NaN
+|row3|1.0|14.0
+|row4|NaN|13.0
+|===
+
+how=inner인 경우 df1와 df2의 인덱스의 교집합을 기준으로 합니다.
+
+[source, python]
+----
+df1.join(df2,how='inner')
+----
+
+[%header, cols=3, width=40%]
+|===
+||col1|col2
+|row3|1|14
+|===
+
+=== merge() 메소드
+
+merge() 메소드는 두 DataFrame 객체를 병합합니다. join() 메소드와 비슷하지만 더 세부적인 설정이 가능한 메소드로, 인덱스-열 기준 병합도 가능하며, intercator 인수를 통한 병합 정보 확인, validate를 통한 병합 방식 확인등이 가능합니다.
+
+merge() 메소드의 파라미터는 아래와 같습니다.
+
+_DataFrame.merge(right, how='inner', on=None, left_on=None, right_on=None, left_index=False, right_index=False, sort=False, suffixes=('_x', '_y'), copy=True, indicator=False, validate=None)_
+
+[%header, cols="1,1,4"]
+|===
+|파라미터|기본값|설명
+|right|-|left와 함께 병합할 객체입니다.
+|how|inner|병합시 기준이 될 인덱스를 정하는 방식입니다. left는 기존객체, right는 병합할 객체, inner은 두 객체의 인덱스의 교집합, outer은 두 객체의 인덱스의 합집합, cross는 행렬곱 입니다.
+|on|-|열 기준 병합시 기준으로할 열의 이름이 양측이 동일하다면, on인수에 입력함으로써 기준 열을 정할 수 있습니다.
+|left_on / right_on|-|열기준 병합 시 기준으로 할 열의 양측 이름이 다르다면, 각각 어떤 열을 기준으로 할지 정해줍니다. 열의 이름을 입력하면 됩니다.
+|left_index / right_index|False|인덱스 기준 병합 시 True로 하면 해당 객체의 인덱스가 병합 기준이됩니다. left_on을 입력하고 right_index를 True로 한다면 열-인덱스 기준 병합도 가능합니다.
+|sort|False|병합 후 인덱스의 사전적 정렬 여부입니다. join메서드와 기능이 동일하므로 참고 바랍니다.
+|suffixes|('_x', '_y')|병합할 객체들간 이름이 중복되는 열이 있다면, 해당 열에 붙일 접미사를 정합니다. 기본적으로 join메서드의 lsuffix / rsuffix와 기능이 동일하지만, suffixes인수는 튜플로 두 값을
+한번에 입력한다는 차이가 있습니다.
+|copy|True|사본을 생성할지 여부입니다.
+|indicator|False|True로 할경우 병합이 완료된 객체에 추가로 열을 하나 생성하여 병합 정보를 출력합니다.
+|validate|-|{'1:1' / '1:m' / 'm:1' / 'm:m'} 병합 방식에 맞는지 확인할 수 있습니다. 만약 validate에 입력한 병합방식과, 실제 병합 방식이 다를경우 오류가 발생됩니다.예를들어, validate="1:m"으로 입력하였는데, 실제로 m:1 병합방식일 경우 오류가 발생됩니다.
+|===
+
+**열 기준으로 병합 (left_on / right_on)**
+
+left_on / right_on에 열 이름을 사용하여 열 기준으로 병합이 가능합니다. 먼저 객체 2개를 만들어 보겠습니다.
+
+아래와 같은 2개의 DataFrame이 있을 때,
+
+df1:
+[%header, cols=3, width=40%]
+|===
+||IDX1|VAL
+|0|a|1
+|1|b|2
+|2|c|3
+|3|a|4
+|===
+
+df2:
+[%header, cols=3, width=40%]
+|===
+||IDX2|VAL
+|0|a|5
+|1|c|6
+|2|d|7
+|===
+
+아래 코드로 df1에서는 IDX1을, df2에서는 IDX2를 기준으로 하여 두 객체를 병합할 수 있습니다. IDX1과 IDX2의 값을 매칭하여 병합된 후 이름이 같은 VAL열에 대해서는 _x와 _y가 붙습니다.
+
+[source, python]
+----
+df_merged = df1.merge(df2, left_on='IDX1',right_on='IDX2')
+----
+
+[%header, cols=5, width=40%]
+|===
+||IDX1|VAL_x|IDX2|VAL_y
+|0|a|1|a|5
+|1|a|4|a|5
+|2|c|3|c|6
+|===
+
+**suffixes를 통한 동명인 열 구분**
+
+suffixes에 ('_left', '_right')를 입력하여 열 이름에 _left, _right를 붙일 수 있습니다.
+
+[source, python]
+----
+df_merged = df1.merge(df2, left_on='IDX1',right_on='IDX2',suffixes=('_left','_right'))
+----
+
+[%header, cols=5, width=40%]
+|===
+||IDX1|VAL_left|IDX2|VAL_right
+|0|a|1|a|5
+|1|a|4|a|5
+|2|c|3|c|6
+|===
+
+**인덱스 기준으로 병합(left_index / right_index)**
+
+left_index / right_index를 통해 인덱스 기준으로 두 객체를 병합할 수 있습니다. 샘플 데이터는 아래와 같습니다.
+
+[source, python]
+----
+df3 = pd.DataFrame({'VAL1':[1,2,3]},index=['row1','row2','row3'])
+----
+
+[%header, cols=2, width=30%]
+|===
+||VAL1
+|row1|1
+|row2|2
+|row3|3
+|===
+
+[source, python]
+----
+df4 = pd.DataFrame({'VAL2':[4,5,6]},index=['row2','row3','row4'])
+----
+
+[%header, cols=2, width=30%]
+|===
+||VAL2
+|row2|4
+|row3|5
+|row4|6
+|===
+
+left_index와 right_index를 True로 입력하여 두 객체 모두 인덱스를 기준으로 병합할 수 있습니다.
+
+[source, python]
+----
+print(df3.merge(df4, left_index=True,right_index=True))
+----
+
+[%header, cols=3, width=30%]
+|===
+||VAL1|VAL2
+|row2|2|4
+|row3|3|5
+|===
+
+**열과 인덱스를 혼합하여 병합**
+
+left_on / right_on 과 left_index / right_index를 이용하여 양쪽의 기준을 설정하여 인덱스와 열을 병합할 수 있습니다.
+
+샘플 데이터는 아래와 같습니다.
+
+df5 = pd.DataFrame({'VAL1':[1,2,3]},index=['row1','row2','row3'])
+
+[%header, cols=3, width=30%]
+|===
+||VAL1
+|row1|1
+|row2|2
+|row3|3
+|===
+
+[source, python]
+----
+df6 = pd.DataFrame({'IDX':['row2','row3','row4'],'VAL2':[4,5,6]})
+----
+
+[%header, cols=3, width=30%]
+|===
+||IDX|VAL2
+|0|row2|4
+|1|row3|5
+|2|row4|6
+|===
+
+아래 코드는 left_index를 True로 설정하여 인덱스를 기준으로 하고 right_on은 IDX로 지정하여 열 기준으로 병합을 수행합니다.
+
+[%header, cols=3, width=30%]
+|===
+||VAL1|IDX|VAL2
+|0|2|row2|4
+|1|3|row3|5
+|===
+
+**how 인수 사용**
+
+how 인수를 사용하여 병합된 객체의 인덱스의 기준을 정할 수 있습니다. 샘플 데이터는 아래와 같습니다.
+
+[source, python]
+----
+df7 = pd.DataFrame({'IDX':['a','b','c','a'],'VAL':[1,2,3,4]})
+----
+
+[%header, cols=3, width=30%]
+|===
+||IDX|VAL
+|0|a|1
+|1|b|2
+|2|c|3
+|3|a|4
+|===
+
+[source, python]
+----
+df8 = pd.DataFrame({'IDX':['a','c','d'],'VAL':[5,6,7]})
+----
+
+[%header, cols=3, width=30%]
+|===
+||IDX|VAL
+|0|a|5
+|1|c|6
+|2|d|7
+|===
+
+how=left인 경우 왼쪽 객체의 인덱스를 기준으로 병합합니다.
+
+[source, python]
+----
+df_merged = df7.merge(df8,how='left',on='IDX')
+----
+
+[%header, cols=4, width=30%]
+|===
+||IDX|VAL_x|VAL_y
+|0|a|1|5.0
+|1|b|2|NaN
+|2|c|3|6.0
+|3|a|4|5.0
+|===
+
+how=right인 경우 오른쪽 객체의 인덱스를 기준으로 병합합니다.
+
+[source, python]
+----
+df_merged = df7.merge(df8,how='right',on='IDX')
+----
+
+[%header, cols=4, width=30%]
+|===
+||IDX|VAL_x|VAL_y
+|0|a|1.0|5
+|1|a|4.0|5
+|2|c|3.0|6
+|3|d|NaN|7
+|===
+
+how=inner인 경우 양쪽 객체 모두가 공통으로 갖는 인덱스를 기준으로 병합합니다.(교집합)
+
+[source, python]
+----
+df7.merge(df8,how='inner',on='IDX')
+----
+
+[%header, cols=4, width=30%]
+|===
+||IDX|VAL_x|VAL_y
+|0|a|1|5
+|1|a|4|5
+|2|c|3|6
+|===
+
+how=outer인 경우 양쪽 객체의 인덱스 모두를 기준으로 합니다.(합집합)
+
+[source, python]
+----
+df_merged = df7.merge(df8,how='outer',on='IDX')
+----
+
+[%header, cols=4, width=30%]
+|===
+||IDX|VAL_x|VAL_y
+|0|a|1.0|5.0
+|1|a|4.0|5.0
+|2|b|2.0|NaN
+|3|c|3.0|6.0
+|4|d|NaN|7.0
+|===
+
+indicator인수를 통한 병합 정보 출력
+indicator인수를 True로 할 경우 마지막 열에 _merge열을 추가하여 병합 정보를 출력합니다.
+
+[source, python]
+----
+df7.merge(df8,how='outer',on='IDX',indicator=True)
+----
+
+[%header, cols=5, width=40%]
+|===
+||IDX|VAL_x|VAL_y|_merge
+|0|a|1.0|5.0|both
+|1|a|4.0|5.0|both
+|2|b|2.0|NaN|left_only
+|3|c|3.0|6.0|both
+|4|d|NaN|7.0|right_only
+|===
+
+**validate를 통한 병합방식 검증**
+
+validate인수에 값을 입력하여 해당 병합방식이 맞는지 검증이 가능합니다. 병합 방식이 다를경우 오류를 출력합니다.
+
+[source, python]
+----
+# 1:m인지 검증
+df7.merge(df8,how='outer',on='IDX',validate='1:m')
+----
+
+----
+오류발생
+pandas.errors.MergeError: Merge keys are not unique in left dataset; not a one-to-many merge
+m:1인지 검증. 병합 방식이 m:1이 맞기 때문에 결과값을 출력합니다.
+----
+
+[source, python]
+----
+print(df7.merge(df8,how='outer',on='IDX',validate='m:1'))
+----
+
+[%header, cols=5, width=40%]
+|===
+||IDX|VAL_x|VAL_y
+|0|a|1.0|5.0
+|1|a|4.0|5.0
+|2|b|2.0|NaN
+|3|c|3.0|6.0
+|4|d|NaN|7.0
+|===
+
+**how인수에 cross 적용**
+
+how인수중 cross는 행렬의 곱집합을 의미합니다. 단순히 말하면 행렬의 모든 경우의수를 출력합니다. 예제 데이터는 아래와 같습니다.
+
+[source, python]
+----
+df9 = pd.DataFrame({'IDX1':['a','b']})
+----
+
+[%header, cols=2, width=40%]
+|===
+||IDX1
+|0|a
+|1|b
+|===
+
+[source, python]
+----
+df10 = pd.DataFrame({'IDX2':['c','d']})
+----
+
+[%header, cols=2, width=40%]
+|===
+||IDX2
+|0|c
+|1|d
+|===
+
+how인수에 cross를 입력하면 두 객체의 행렬곱을 return 합니다.
+
+[source, python]
+----
+df_merged = df9.merge(df10,how='cross')
+----
+
+[%header, cols=3, width=40%]
+|===
+||IDX1|IDX2
+|0|a|c
+|1|a|d
+|2|b|c
+|3|b|d
+|===
+
+=== align() 메소드
+
+align메서드는 두 객체를 특정 기준들에 맞추어 정렬하는 메서드입니다.두개의 데이터를 튜플 형태로 return 합니다. 
+
+align() 메소드의 파라미터는 아래와 같습니다.
+
+_self.align(other, join='outer', axis=None, level=None, copy=True, fill_value=None, method=None, limit=None, fill_axis=0, broadcast_axis=None)_
+
+[%header, cols="1,1,4"]
+|===
+|파라미터|기본값|설명
+|other|_|self와 함께 정렬할 객체 입니다.
+|join|'outer'|{inner / left / right / outer} 정렬 기준이 될 인덱스 입니다. inner이면 교집합, left면 self의 인덱스, right면 other의 인덱스, outer이면 합집합으로 인덱스를 사용합니다.
+|axis|-|{0 : index / 1 : columns} 정렬할 레이블입니다. 기본값으로 두 축 모두 정렬합니다.
+|level|-|multi index의 경우 실행할 수준(level)을 설정합니다.
+|copy|-|사본을 생성할지의 여부입니다.
+|fill_value|-|결측치를 어떤 값으로 채울지의 여부입니다. 기존 객체에 포함된 결측치의 경우는 바뀌지 않습니다.
+|method|-|{ffill / bfill} 결측치를 어떻게 채울지 여부입니다. ffill의 경우 위의값과 동일하게, bfill의 경우 아래 값과 동일하게 채웁니다.
+|limit|-|결측치를 몇개나 채울지 여부입니다. limit에 설정된 갯수만큼만 결측치를 변경합니다.
+|fill_axis|0|{0 : index / 1 : columns} method와 limit를 가로로 적용할지 세로로 적용할지 여부입니다.
+|broadcast_axis|-|{0 : index / 1 : columns} 어느 축을 기준으로 브로드캐스트할지 여부입니다.
+|===
+
+=== update() 메소드
+
+
+
+
 
 == 그룹화
 
