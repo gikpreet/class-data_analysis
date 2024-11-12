@@ -641,9 +641,75 @@ _self.align(other, join='outer', axis=None, level=None, copy=True, fill_value=No
 
 === update() 메소드
 
-https://wikidocs.net/153692
+update() 메소드는 DataFrame의 열을 other 객체의 동일한 열의 값으로 덮어쓰는 동작을 수행합니다. DataFrame을 return하지 않고 원본이 변경됩니다.
 
+update() 메소드의 파라미터는 다음과 같습니다.
 
+_self.update(other, join='left', overwrite=True, filter_func=None, errors='ignore')_
+
+[%header, cols="1,1,4"]
+|===
+|파라미터|기본값|설명
+|other|-|self에 덮어씌울 객체 입니다.
+|join|'left'|{left} 기준이 될 인덱스 입니다. left만 선택 가능하므로 무시해도됩니다.
+|overwrite|True|{True / False} 덮어씌울 방식입니다. True면 self의 모든 데이터에 other을 덮어씌웁니다.
+False면 self에서 Na인 값에 대해서만 덮어씌우기를 진행합니다.
+|filter_func|-|덮어씌울값을 함수로 정할 수 있습니다.
+|errors|-|{raise / ignore} raise일 경우 self와 other 모두 Na가 아닌 값이 있을경우 오류를 발생시킵니다.
+|===
+
+아래와 같은 2개의 DataFrame이 있을 때,
+
+df1:
+
+[%header, cols=3, width=40%]
+|===
+||A|B
+|0|1|NaN
+|1|2|5.0
+|2|3|6.0
+|===
+
+df2:
+
+[%header, cols=3, width=40%]
+|===
+||BC
+|0|24.0|37
+|1|NaN|38
+|2|26.0|39
+|===
+
+overwrite 파라미터를 사용하여 업데이트 방식을 설정할 수 있습니다. 
+overwrite 값이 True이면 df1과 df2 DataFrame에서 같은 이름을 가진 df1의 컬럼 값을 df2의 컬럼값으로 업데이트 합니다. False인 경우 df1에서 NaN이 값만 업데이트 합니다. 모든 경우에 other(여기서는 df2)의 NaN 값은 무시됩니다.
+
+[source, python]
+----
+df1.update(df2,overwrite=True)
+----
+
+[%header, cols=3, width=40%]
+|===
+||A|B
+|0|1|24.0
+|1|2|5.0
+|2|3|26.0
+|===
+
+filter_func 파라미터에 함수를 사용하여 원하는 값만 선택하도록 할 수 있습니다. 아래 코드는 other(여기서는 df2)의 값 중 6인 값만을 self(여기서는 df1)에 업데이트 합니다.
+
+[source, python]
+----
+df1.update(df2,filter_func=lambda x: x==6)
+----
+
+[%header, cols=3, width=40%]
+|===
+||A|B
+|0|1|NaN
+|1|2|5.0
+|2|3|26.0
+|===
 
 == 그룹화
 
