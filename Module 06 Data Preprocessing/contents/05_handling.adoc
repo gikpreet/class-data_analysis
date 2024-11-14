@@ -1,0 +1,13 @@
+= 누락 데이터를 처리하는 방법
+
+1. Do nothing
+2. 데이터 제거
+3. 평균값/중간값으로 데이터 대치
+4. 가장 많이 사용된 값 / 0 / 상수로 데이터 대치
+5. K-NN 대치
+6. MICE(Multivariate Impuutation by Chained Equation) 대치
+7. Deep learning을 이용한 대치
+
+---
+
+https://dining-developer.tistory.com/19

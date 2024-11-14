@@ -1,0 +1,31 @@
+= 누락 데이터 보간(Imputation)
+
+* 데이터의 품질을 높일 목적으로 누락 데이터를 삭제하기 힘든 경우가 더 많음
+* 데이터 분석의 정확도는 데이터의 품질외에도 제공되는 데이터의 양에 상당한 영향을 받음
+* 누락 데이터를 대체할 값으로는 평균값, 최빈값 등을 사용
+* _fillna()_ 함수 사용
+
+---
+
+**평균값을 사용하여 데이터 치환**
+
+[source, python]
+----
+mean_age = df_titanic['age'].mean(axis=0)
+df_titanic.fillna(mean_age, inplace=True)
+----
+
+**빈도수 높은 데이터를 사용하여 데이터 치환**
+
+[source, python]
+----
+most_freq = df_titanic.embark_town.value_counts(dropna=True).idxmax()
+df_titanic.embark_town.fillna(most_freq, inplace=True)
+----
+
+**이웃하고 있는 값으로 데이터 치환**
+
+[source, python]
+----
+df_titanic.embark_town.fillna(method='ffill', inplace=True)
+----
