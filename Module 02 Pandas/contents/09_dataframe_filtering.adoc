@@ -1,0 +1,164 @@
+= DataFrame 데이터 필터링
+
+* DataFrame에서 특정 조건을 만족하는 데이터 필터링
+* 세 가지 단계를 거쳐 수행할 수 있음
+1. 컬럼을 선택합니다.
+2. 컬럼의 데이터와 특정 조건을 비교. 조건을 만족하는 경우에는 True, 아닌 경우에는 False 반환
+3. 비교 결과를 이용해서 데이터프레임에서 일부 데이터를 추출합니다.
+
+---
+
+데이터 분석을 하다보면 특정한 조건을 만족하는 행을 필터링해야하는 경우가 많이 있습니다. 예를 들어 특정 값을 초과하는 모든 행을 선택해서 새로운 데이터셋으로 만들고 싶을 수 있습니다. 또는 특정 단어나 숫자가 포함되어 있는 행만 필요할 수도 있습니다. DataFrame에서 이런 연산을 수행할 수 있습니다.
+
+특정 조건을 만족하는 행을 필터링하는 방법은 크게 세 가지 단계를 거칩니다.
+
+1. 컬럼을 선택합니다.
+2. 컬럼의 데이터와 특정 조건을 비교합니다. 조건을 만족하는 경우에는 True, 아닌 경우에는 False 반환합니다.
+3. 비교 결과를 이용해서 데이터프레임에서 일부 데이터를 추출합니다.
+
+== 예제 데이터
+
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|0|Celine|France|90|100|100
+|1|James|UK|80|40|30
+|2|Jason|USA|80|40|60
+|3|Hans|Germany|60|50|90
+|===
+
+위 DataFrame의 특정 컬럼에 대해 equality 연산자(==)를 적용하면, 일치하는 값이 True인 같은 개수의 열과 행을 가지는 Series를 return 합니다.
+
+[source, python]
+----
+is_usa = df['nation'] == 'USA'
+----
+
+----
+0    False
+1    False
+2     True
+3    False
+Name: nation, dtype: bool
+----
+
+해당 Series로 DataFrame을 검색하면 True인 열만 return 합니다.
+
+[source, python]
+----
+df[is_usa]
+----
+
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|2|Jason|USA|80|40|60
+|===
+
+== 데이터 필터링
+
+이름이 Celine인 데이터를 포함하는 행(row)만으로 필터링된 DataFrame은 아래와 같은 순서로 만들수 있습니다.
+
+1. 이름을 표현하는 컬럼을 찾습니다. 여기서는 name 입니다.
+2. 이름이 Celine인 데이터를 포함하는 Series 객체를 == 연산자를 사용해 생성합니다.
++
+[source, python]
+----
+is_celine = df['name'] == 'Celine'
+----
++
+3. 생성한 Series 객체로 dataframe 데이터를 필터링 합니다.
++
+[source, python]
+----
+df_celine = df[is_celine]
+----
++
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|0|Celine|France|90|100|100
+|===
+
+총점이 200점 이상인 학생을 필터링 하려면 아래와 같이 할 수 있습니다.
+
+1. 총점 컬럼을 생성하여 DataFrame에 추가합니다.
++
+[source, python]
+----
+total = df['english'] + df['math'] + df['science']
+df['total'] = total
+----
++
+2. total 컬럼으로 총점이 200점이 넘는 값에 대한 Series를 생성합니다.
++
+[source, python]
+----
+is_honor = df['total'] >= 200
+----
++
+3. DataFrame을 필터링합니다.
++
+[source, python]
+----
+df_honor = df[is_honor]
+----
++
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|0|Celine|France|90|100|100
+|3|Hans|Germany|60|50|90
+|===
+
+== 두 가지 이상의 조건 필터링
+
+두 가지 이상의 조건에 대한 필터링을 만드려면 두 조건에 대한 만족 결과를 가지는 여러 Series 객체를 생성한 후 & 연산자를 사용할 수 있습니다.
+
+아래 코드는 math와 science 모두 100점인 학생을 필터링합니다.
+
+[source, python]
+----
+is_math_100 = df['math'] == 100
+is_science_100 = df['science'] == 100
+df_excellent = df[is_math_100 & is_science_100]
+----
+
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|0|Celine|France|90|100|100
+|===
+
+| (bitwise 연산자) 역시 사용할 수 있습니다.
+
+[source, python]
+----
+is_math_100 = df['math'] == 100
+is_usa = df['nation'] == 'USA'
+df_result = df[is_math_100 | is_usa]
+----
+
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|0|Celine|France|90|100|100
+|2|Jason|USA|80|40|60
+|===
+
+== 특정 문자열을 포함하는 데이터 필터링
+
+컬럼이 str 타입의 데이터인 경우 str.contains 메소드를 사용하여 필터링 할 수 있습니다.
+
+[source, python]
+----
+is_u = df['nation'].str.contains('U')
+df_u = df[is_u]
+----
+
+[%header, cols=6, width=50%]
+|===
+||name|nation|english|math|science
+|1|James|UK|80|40|30
+|2|Jason|USA|80|40|60
+|===
