@@ -56,5 +56,6 @@ image:../images/image04.png[]
 +
 image:../images/image05.png[]
 
-
+////
 https://hackmd.io/@firasj/BkSQJQ8eh#Lab-1---Installing-HDP-Sandbox
+////
