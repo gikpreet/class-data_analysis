@@ -1,0 +1,20 @@
+= Excel을 사용한 데이터 분석
+
+== Excel에서 외부 데이터 사용
+
+* Excel은 다양한 형식의 데이터 파일 뿐 아니라 다양한 데이터베이스 관리 시스템의 데이터를 가져올 수 있음
+
+
+
+
+
+== PowerPivot
+
+[source, sql]
+----
+SELECT DISTINCT m.MovieID, BoxOfficeWWGross, BoxOfficeUSGross, Budget, m.GradeInKoreaID, (SELECT TOP 1 Genre.GenreID FROM Genre INNER JOIN MovieGenre ON Genre.GenreID = MovieGenre.GenreID INNER JOIN Movie ON MovieGenre.MovieID = m.MovieID) AS GenreID
+FROM Movie AS m INNER JOIN GradeInKorea ON m.GradeInKoreaID = GradeInKorea.GradeInKoreaID
+	INNER JOIN MovieGenre ON MovieGenre.MovieID = m.MovieID
+	INNER JOIN Genre On MovieGenre.GenreID = Genre.GenreID
+ORDER BY m.MovieID
+----

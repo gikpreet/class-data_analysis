@@ -1,0 +1,14 @@
+== 데이터베이스 연결
+
+* ODBC, OLE DB, TBS등 다양한 형태의 데이터베이스에 접근
+* 데이터 웨어하우스에 접근
+
+--- 
+
+Microsoft Excel은 기본으로 설정된 데이터베이스 시스템에 대한 연결을 허용하며, ODBC, OLE DB등 표준을 지원하는 데이터 소스에 대한 접근을 허용합니다.
+
+== Microsoft SQL Server에 연결(Tabular Data Set)
+
+== ODBC 연결
+
+== OLE DB 연결
