@@ -1,4 +1,4 @@
-= Lab 01: WordCount
+= Lab 01: 간단한 WordCount MapReduce 프로그램 생성 
 
 이 연습에서는 HDP Sandbox에서 실행할 수 있는 MapReduce 프로그램을 작성합니다. 작성한 프로그램은 파일의 단어 수를 카운트하는 간단한 프로그램이며, Apache Maven을 사용하여 작성되어 Hadoop Cluster에서 실행됩니다. 이 연습을 실행하기 전에 아래와 같은 환경이 갖추어져야 합니다.
 
